@@ -1,0 +1,26 @@
+#ngApp {
+    /*max-width: 840px;*/
+    margin: auto;
+}
+
+/*Custom font:*/
+@font-face {
+    font-family: 'solcubeHeadline'; 
+    src: url('../fonts/ag-book-stencil.otf'); 
+    font-weight: normal; 
+}
+
+@font-face {
+    font-family: 'solcubeMain'; 
+    src: url('../fonts/DINMittelschrift.otf'); 
+    font-weight: normal; 
+}
+
+.solcubeHeadline { 
+	font-family: 'solcubeHeadline', sans-serif; 
+}
+
+.solcubeMain { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+

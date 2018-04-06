@@ -1,0 +1,115 @@
+/*
+Theme Name: Enfold Child
+Description: A <a href='http://codex.wordpress.org/Child_Themes'>Child Theme</a> for the Enfold Wordpress Theme. If you plan to do a lot of file modifications we recommend to use this Theme instead of the original Theme. Updating wil be much easier then.
+Version: 1.0
+Author: Kriesi
+Author URI: http://www.kriesi.at
+Template: enfold
+*/
+
+
+
+/*Add your own styles here:*/
+@font-face {
+    font-family: 'solcubeHeadline'; 
+    src: url('fonts/ag-book-stencil.otf'); 
+    font-weight: normal; 
+}
+
+@font-face {
+    font-family: 'solcubeMain'; 
+    src: url('fonts/DINMittelschrift.otf'); 
+    font-weight: normal; 
+}
+
+/* SolCube One Pager */
+.page-id-13 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+
+.page-id-13 h1 { 
+	font-family: 'solcubeHeadline', sans-serif; 
+}
+
+.page-id-13 h2 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+
+.page-id-13 h3 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+/* End SolCube One Pager */
+
+/* Solmate one page portfolio */
+.page-id-1309 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+
+.page-id-1309 h1 { 
+	font-family: 'solcubeHeadline', sans-serif; 
+}
+
+.page-id-1309 h2 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+
+.page-id-1309 h3 { 
+	font-family: 'solcubeMain', sans-serif; 
+}
+
+.headline { 
+	font-weight: normal;
+	font-family: 'solcubeHeadline', sans-serif; 
+}
+/* End Solmate one page portfolio */
+
+/* Colored sections sometimes show 1px border */
+.container_wrap { border-top: none !important; }
+
+/* for development, hide Color sections until they should be shown */
+#hide1 {
+		display: none !important;
+}
+
+#hide2 {
+		display: none !important;
+}
+
+#hide3 {
+		display: none !important;
+}
+
+@media only screen and (min-width: 768px) {
+  /* Add your Desktop Styles here */
+	#desktop-only {
+		display: block !important;
+	}
+	#mobile-only {
+		display: none !important;
+	}
+}
+@media only screen and (max-width: 768px) {
+  /* Add your Mobile Styles here */
+	#desktop-only {
+		display: none !important;
+	}
+	#mobile-only {
+		display: block !important;
+	}
+}
+
+/* Hide shopping cart icon while developing the shop */
+/* http://www.kriesi.at/support/topic/remove-shopping-cart-icon/ */
+/*#top .cart_dropdown { display: none; }*/
+
+/* WooCommerce Terms and conditions checkbox shows shitty on the right. Fix it */
+/* http://www.kriesi.at/support/topic/moving-the-accept-terms-and-conditions-checkbox/ */
+#payment .terms {
+text-align: left !important;
+}
+
+/* Hide related products from product description bottom, which looks shitty. Use related products from woocommerce instead */
+/* http://www.kriesi.at/support/topic/remove-related-postsproducts-on-product-descriptions-2/ */
+#jp-relatedposts{
+display:none !important;
+}

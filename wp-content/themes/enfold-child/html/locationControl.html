@@ -1,0 +1,57 @@
+	<div layout="row" layout-align="left center" ng-Show="location.showSearchField == false">
+		<span class="md-subhead">{{ solmate.formatted_address }}</span>
+		
+		<md-button class="md-primary" ng-Click="location.toggleSearch();">Change</md-button>
+	</div>
+	
+		<form name="locationForm" ng-submit="location.select(item);" ng-Show="location.showSearchField == true">
+			<div layout="column" layout-gt-sm="row">
+
+				<md-autocomplete 
+					flex 
+					required
+					md-input-name="autocompleteField"
+					md-require-match="true"
+					md-no-cache="false" 
+					md-selected-item="location.item" 
+					ng-model-options="{debounce: 600}" 
+					md-search-text="location.searchText" 
+					md-items="item in location.search(location.searchText)" 
+					md-item-text="item.description" 
+					md-min-length="1" 
+					md-max-length="50"
+					placeholder="Enter location"
+					md-autoselect="false"
+					md-selected-item-change="location.select(item);">
+					<md-item-template>
+					  <span md-highlight-text="searchText">{{item.description}}</span>
+					</md-item-template>
+					<md-not-found>
+						No location found or Google Maps API not ready.
+					</md-not-found>
+					<div ng-messages="locationForm.autocompleteField.$error" ng-if="locationForm.autocompleteField.$touched">
+						<div ng-message="required">You <b>must</b> select a location.</div>
+						<div ng-message="md-require-match">Please select a location from the list</div>
+					</div>
+				</md-autocomplete>	
+				
+				<md-button class="md-primary" aria-label="Autolocate" ng-Click="location.autoLocate()">
+					<md-tooltip md-delay="500">Try autolocate</md-tooltip>
+					<md-icon>place</md-icon>
+					Autolocate
+				</md-button>
+			
+			
+			</div>
+			<br />
+		</form>	
+	
+	<!-- Style Map 
+		https://snazzymaps.com/
+		http://www.cleancss.com/json-minify/
+	-->		
+	<ng-map 
+		styles="[{'featureType':'administrative','elementType':'labels.text.fill','stylers':[{'color':'#ef3341'}]},{'featureType':'landscape','elementType':'all','stylers':[{'color':'#f2f2f2'}]},{'featureType':'poi','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'road','elementType':'all','stylers':[{'saturation':-100},{'lightness':45}]},{'featureType':'road.highway','elementType':'all','stylers':[{'visibility':'simplified'}]},{'featureType':'road.arterial','elementType':'labels.icon','stylers':[{'visibility':'off'}]},{'featureType':'transit','elementType':'all','stylers':[{'visibility':'off'}]},{'featureType':'water','elementType':'all','stylers':[{'color':'#46bcec'},{'visibility':'on'}]}]"
+		center="[{{solmate.lat}}, {{solmate.lng}}]">
+		<marker position="{{solmate.lat}},{{solmate.lng}}"></marker>
+	</ng-map>

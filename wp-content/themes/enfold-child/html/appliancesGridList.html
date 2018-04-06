@@ -1,0 +1,78 @@
+<style>
+/* Grid Tiles */
+
+#appliancesGridList {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.gridTileContent {
+	vertical-align: top;
+	text-align: center;
+}
+
+.gridTileCounter {
+	font-size: 22pt;
+	
+}
+
+.gridTile {
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+.gridTile:hover {
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2)
+}
+
+.mini {
+	font-size: 10pt;
+}
+
+.yellow {
+  background: #FFCD00; }
+
+.orange {
+  background: #FF9E1B; }
+
+.pink {
+  background: #EF3341; }
+  
+.purple {
+  background: #693C5D; }
+  
+.grey {
+  background: #C0C0C0; }
+  
+
+/* end Grid Tiles */
+</style>
+<div id="appliancesGridList" flex ng-cloak>
+	<md-grid-list
+			md-cols="2" 
+			md-cols-sm="3" 
+			md-cols-md="4" 
+			md-cols-gt-md="6" 
+			md-row-height-gt-md="1:1" 
+			md-row-height="1:1"
+			md-gutter="12px" 
+			md-gutter-gt-sm="8px">
+
+		<md-grid-tile 
+			id="gridTile{{$index}}"
+			ng-repeat="app in appGrid.tiles"
+			md-rowspan="1"
+			md-colspan="1"
+			md-colspan-sm="1"
+			md-colspan-xs="1"
+			ng-class="app.background"
+			class="gridTile"
+			ng-click="appGrid.selectApp($index)"
+			>
+			
+				<img ng-src="{{app.icon}}" alt="{{app.name}}" />			
+			<div>
+		  <md-grid-tile-footer><h3>{{app.name}}</h3></md-grid-tile-footer>
+		</md-grid-tile>
+	</md-grid-list>
+</div>
