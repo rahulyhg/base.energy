@@ -1,2 +1,2 @@
-# SolCube-Health
-Monitors SolCube voltage, current flows and keeps history
+# base.energy
+Helping people getting solar powered quick and easy.
