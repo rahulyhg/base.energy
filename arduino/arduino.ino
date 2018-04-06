@@ -64,8 +64,8 @@ GPRS gprs;
 GSM gsmAccess(false); // true is debug
 
 // URL, path & port (for example: arduino.cc)
-char server[] = "dev.base.energy";
-char path[] = "/elektroskop-baselogger/baseLogger.php?voltage=";
+char server[] = "base.energy";
+char path[] = "/webservice/receiveHealth.php?volt=";
 int port = 80; // port 80 is the default for HTTP
 
 //****Programm******
