@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple History</title>
+
+<!-- Charts JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+
+<!-- jQuery -->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<!-- bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+<h1>Simple History</h1>
+<div class="input-group">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="">From</span>
+  </div>
+  <input id="from" type="text" class="form-control" value="2018-04-07 00:00:00">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="">To</span>
+  </div>  
+  <input id="to" type="text" class="form-control" value="2018-04-08 00:00:00">
+  <button type="button" class="btn btn-primary" onclick="refresh()">Refresh</button>
+</div>
+<br />
+<canvas id="myChart"></canvas>
+
+<div id="myTable"></div>
+
+<script>
+function getHistory (sender, from, to) {
+	
+	// prepare JSON request
+	var json = {
+			"sender": sender, // TODO
+			"from": from,
+			"to": to
+	};
+		
+
+	$.ajax({
+		type: "POST",
+		url: "https://base.energy/webservice/getHistory.php",
+		data: JSON.stringify(json),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(data){
+			//console.log(data);
+			var labels = ["timestamp", "volt", "amps", "relay", "signal"];
+			drawTable(labels, data);
+			
+			// prepare data for charts js
+			var chartData = new Array();
+			
+			for (var i=0; i<data.length; i++) {
+				chartData[i] = data[i][1] // we want volts in our diagram
+			}
+			drawChart(new Array (chartData.length), chartData);
+			
+		},
+		failure: function(errMsg) {
+			console.log("ERROR!");
+		}
+	});
+		
+}
+
+function drawTable (labels, tableData) {
+
+	// remove old table before refreshing (if there is one)
+	var div = document.getElementById("myTable");   // Get the <ul> element with id="myList"
+	if (div.childNodes[0])
+		div.removeChild(div.childNodes[0]);   	
+
+	// table
+	var table = document.createElement('table');
+	table.className = "table";
+	
+	// header
+	var columns = labels;
+	var tableHead = document.createElement('thead');	
+	var headRow = document.createElement('tr');
+	columns.forEach(function(cellData) {
+		var cell = document.createElement('th');
+		cell.appendChild(document.createTextNode(cellData));
+		headRow.appendChild(cell);
+	});
+	tableHead.appendChild(headRow);
+	table.appendChild(tableHead);
+	
+	// rows
+	var tableBody = document.createElement('tbody');
+
+	tableData.forEach(function(rowData) {
+		var row = document.createElement('tr');
+
+		rowData.forEach(function(cellData) {
+			var cell = document.createElement('td');
+			cell.appendChild(document.createTextNode(cellData));
+			row.appendChild(cell);
+		});
+
+		tableBody.appendChild(row);
+	});
+
+	table.appendChild(tableBody);
+	div.appendChild(table);
+
+}
+
+function drawChart (labels, data) {
+
+	// if we already have a chart on screen, we need to clear it before redrawing it
+	if (myChart)
+		myChart.destroy();
+		
+	var ctx = document.getElementById("myChart").getContext('2d');
+	myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [{
+				//label: '# of Votes',
+				data: data,
+				borderWidth: 1
+			}]
+		},
+		options: {
+			legend: {
+				display: false
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero:true
+					}
+				}]
+			}
+		}
+	});
+
+}
+
+// initiate request to server and response table and chart display
+function refresh() {
+	
+	// read dates from ui
+	from = document.getElementById("from").value;
+	to = document.getElementById("to").value;	
+
+	getHistory("Arduino", from, to);
+}
+
+// set default timestamp filter
+var dateFrom = new Date();
+dateFrom.setHours(dateFrom.getHours() - 48);
+
+// needed for ISO time which is UTC
+var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+
+// get from date from minus 48 hours in milliseconds and timzeone shift at once (WHAT DA FUGG)
+var from = (new Date(Date.now() - tzoffset - (48 * 60 * 60 * 1000))).toISOString().slice(0, 19).replace('T', ' ');
+var to = (new Date(Date.now() - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
+
+document.getElementById("from").value = from;
+document.getElementById("to").value = to;
+
+
+// we need myChart global to destroy it before redrawing
+var myChart;
+refresh();
+
+
+
+</script>
+
+
+</body>
+</html>

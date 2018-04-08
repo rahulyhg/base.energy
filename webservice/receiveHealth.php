@@ -1,11 +1,11 @@
 <?php
 
 // we use DateTime to utilize DateTimeZone
-/*
+
 $dt = new DateTime("now", new DateTimeZone("Europe/Vienna"));
 $dt->setTimestamp(time());
 $dtFormatted = $dt->format("Y-m-d H:i:s");
-*/
+
 
 // Lets write health to our database
 try {
@@ -25,7 +25,7 @@ try {
     // use exec() because no results are returned
 	
 	$volt = $_GET["volt"];
-    $conn->exec("INSERT INTO history (volt) VALUES ($volt)");
+    $conn->exec("INSERT INTO history (timestamp, volt) VALUES ('$dtFormatted', $volt)");
 	$conn = null;
 }
 catch(PDOException $e) {
