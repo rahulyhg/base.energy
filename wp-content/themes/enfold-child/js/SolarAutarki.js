@@ -65,12 +65,10 @@ function zeitzuangle (tagesstunde){
 	return mathtoradians(hourangle);
 }
 //crate beeinflusst batterysize
-var batterysize;
-var verbraucher;
+
 function crate(batterysize, verbraucher){
 	
 	var crate = verbraucher/batterysize;
-	//console.log("crate "+crate+ " batterysize vor crate "+ batterysize	);
 	if (crate<0.6){
 		batterysize=(batterysize*1);
 	}else {
@@ -91,30 +89,9 @@ function crate(batterysize, verbraucher){
 	}else {
 		batterysize=batterysize*0.6;
 }}}}}}
+//console.log("crate "+crate+ " batterysize nach crate "+ batterysize	);
 return batterysize;
 }
-var batterystatus= new Array(366);
-for (var i=0; i<366; i++){
-	batterystatus[i]= new Array(24);
-}
-var clearskyhourly= new Array(366);
-for (var i=0; i<366; i++){
-	clearskyhourly[i]= new Array(24);
-}
-var nosun= new Array(13);
-for (var i=0; i<13; i++){
-	nosun[i]= 0;
-}
-var realskydaily= new Array(366);
-var clearskydaily= new Array(366);
-var clearskymonthlyhorizontal= new Array(13);
-var clearskymonthly= new Array(13);
-var realskymonthly= new Array(13);
-var skyfacmonthly= new Array(13);
-var realskyhourly= new Array(366);
-var cosdetahourly= new Array(366);
-var sunazimuthhourly= new Array(366);
-var sunaltitudehourly= new Array(366);
 
 function jahrestagzumonat(jahrestag){
 	if (jahrestag<32){
@@ -193,41 +170,55 @@ function monatzumonatstage(monat){
 	}}}}}}}}}}}
 	return tage;
 }
-var anfang = 1;
-var ende = 365;
-var tagesstunde;
-var jahrestag;
-var einheitenfactor=1; //1000 für kWh
+
 var irradiance = 1367;                         //W/m2
 var effizienzreel = 0.75;
-var realsumme;
-var solarautarkie;
 var now = new Date();
 var start = new Date(now.getFullYear(), 0, 0);
+
+function getsolmateday(){
+
 var diff = now - start;
 var oneDay = 1000 * 60 * 60 * 24;
 var solmateday = Math.floor(diff / oneDay);
+return solmateday;
+}
 var solmatehour = now.getHours();
-for (var i=0; i<13; i++){
-	realskymonthly[i]= 0;
-}
-for (var i=0; i<13; i++){
-	skyfacmonthly[i]= 0;
-}
+
 function ClearskyValue(latitude, tilt, moduleazi){
 	moduleazirad = mathtoradians(moduleazi);
-//console.log(latitude + " =latitude " + moduleazi + " =moduleazi " +tilt+ " =tilt");
 	tilt = mathtoradians(tilt);
+	// declare objects properly and clean in the right scope
+	var resultscsv = new Array (7);
+	var cosdetahourly= new Array(366);
+	for (var i=0; i<366; i++){
+		cosdetahourly[i]= new Array(24);
+	}
+	var sunazimuthhourly= new Array(366);
+	var sunaltitudehourly= new Array(366);
+	for (var i=0; i<366; i++){
+		sunaltitudehourly[i]= new Array(24);
+	}
+	for (var i=0; i<366; i++){
+		sunazimuthhourly[i]= new Array(24);
+	}
+	var clearskyhourly= new Array(366);
+	for (var i=0; i<366; i++){
+	clearskyhourly[i]= new Array(24);
+	}
+	var clearskydaily= new Array(366);
+	var clearskymonthly= new Array(13);
 	for (var i=0; i<13; i++){
 	clearskymonthly[i]= 0;
-}
+	}
 	var summe=0;
-	for (jahrestag=1; jahrestag<=365;jahrestag++){
+	//console.log(latitude + " =latitude " + moduleazi + " =moduleazi " +tilt+ " =tilt");
+	for (var jahrestag=1; jahrestag<=365;jahrestag++){
 	clearskydaily[jahrestag]=0;
 	var month=jahrestagzumonat(jahrestag);
 	var declinationnow = declination(jahrestag);
-	var irradiancenow= irradiance*(1+(0.034*Math.cos((mathtoradians(360/365.25)*jahrestag))))/einheitenfactor;
-	var sunrise = (-1)*Math.acos((-1*Math.tan(declinationnow))*Math.tan(mathtoradians(latitude)));
+	var irradiancenow= irradiance*(1+(0.034*Math.cos((mathtoradians(360/365.25)*jahrestag))));
+	var sunrise = ((-1)*Math.acos((-1*Math.tan(declinationnow))*Math.tan(mathtoradians(latitude))));
 	if (mathtoradians(latitude)<0){
 		if (isNaN(sunrise)){
 			if ((82<jahrestag) && (jahrestag<264)){
@@ -266,8 +257,11 @@ function ClearskyValue(latitude, tilt, moduleazi){
 	}
 	//console.log("Am "+ jahrestag + " sunrise um " + sunrise+" und sunset um "+ sunset);
 	//console.log("Am "+ jahrestag + " declination " + declinationnow +" und irradiancenow " + irradiancenow);
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
+	for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
 		clearskyhourly[jahrestag][tagesstunde]=0;
+		sunaltitudehourly[jahrestag][tagesstunde]=0;
+		sunazimuthhourly[jahrestag][tagesstunde]=0;
+		cosdetahourly[jahrestag][tagesstunde]=0;
 		var houranglenow = zeitzuangle(tagesstunde);
 		var sunaltitude = Math.asin(((Math.sin(declinationnow)*Math.sin(mathtoradians(latitude)))+(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.cos(mathtoradians(latitude)))));
 		var azitemp = Math.acos(((Math.sin(declinationnow)*Math.cos(mathtoradians(latitude)))-(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.sin(mathtoradians(latitude))))/Math.cos(sunaltitude));
@@ -291,154 +285,66 @@ function ClearskyValue(latitude, tilt, moduleazi){
 			
 		}
 		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tilt))+(Math.cos(sunaltitude)*Math.sin(tilt)*Math.cos(moduleazirad-sunazimutnow))), -6);
-			//	console.log("part 1 "+(Math.sin(sunaltitude)*Math.cos(tilt))+" part2 "+(Math.cos(sunaltitude)*Math.sin(tilt)*Math.cos(moduleazirad-sunazimutnow))+" und des noamal"+Math.cos(moduleazirad-sunazimutnow));
-				//console.log("part 3 "+Math.sin(sunaltitude)+" part2 "+Math.cos(tilt)+" und des noamal "+Math.cos(sunaltitude)+" und "+Math.sin(tilt));
+		cosdetahourly[jahrestag][tagesstunde]=Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
+		sunazimuthhourly[jahrestag][tagesstunde]=Math.round10(sunazimutnow, -2);
+		sunaltitudehourly[jahrestag][tagesstunde]=Math.round10(sunaltitude, -2);
+		//console.log("part 1 "+(Math.sin(sunaltitude)*Math.cos(tiltrad))+" part2 "+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))+" und des noamal"+Math.cos(moduleazirad-sunazimutnow));
+		//console.log("part 3 "+Math.sin(sunaltitude)+" part2 "+Math.cos(tiltrad)+" und des noamal "+Math.cos(sunaltitude)+" und "+Math.sin(tiltrad));
 		//console.log("moduleazi "+moduleazirad+ " houranglenow " + houranglenow+ " sunaltitude "+sunaltitude+ " sunazimutnow "+sunazimutnow+" cosdeta "+cosdeta);
 		if(cosdeta>=0){
 			if(sunrise<=houranglenow && houranglenow<=sunset){
 				clearskyhourly[jahrestag][tagesstunde]+=Math.round10((cosdeta*irradiancenow), -4);
 				//console.log(month +" month und cosdeta "+cosdeta);
 				clearskydaily[jahrestag] += Math.round10(((cosdeta*irradiancenow)), -2);
-			clearskymonthly[month]=Math.round10(((clearskymonthly[month]+(cosdeta*irradiancenow))), -4);
+				clearskymonthly[month]+= Math.round10(((cosdeta*irradiancenow)), -2);
 				summe +=(cosdeta*irradiancenow); //in Wh pro zeitspanne
-				if ((82==jahrestag) && (tagesstunde==9)){	
+
 				//console.log("Die clearStrahlung am "+jahrestag+"."+month+" um "+tagesstunde+ " " +houranglenow+" hourangle, beträgt "+clearskyhourly[jahrestag][tagesstunde]+ " tilt = "+tilt+"und cosdeta "+ cosdeta+ " sunaltitude "+sunaltitude+" azitemp "+azitemp+" sunazimutnow" +sunazimutnow);
-				}
-			}
-		}
-	}
-}
-}
-function getclearskydaily(latitude, tilt, moduleazi){
-	ClearskyValue(latitude, tilt, moduleazi);
-	return (clearskydaily);
-}
-function getclearskymonthly(latitude, tilt, moduleazi){
-	ClearskyValue(latitude, tilt, moduleazi);
-	return (clearskymonthly);
-}
-function getclearskymonthlyhorizontal(latitude, moduleazi){
-	moduleazirad = mathtoradians(moduleazi);
-//console.log(latitude + " =latitude " + moduleazi + " =moduleazi " +tilt+ " =tilt");
-	tilt = 0;
-	for (var i=0; i<13; i++){
-	clearskymonthlyhorizontal[i]= 0;
-}
-	for (jahrestag=1; jahrestag<=365;jahrestag++){
-	var month=jahrestagzumonat(jahrestag);
-	var declinationnow = declination(jahrestag);
-	var irradiancenow= irradiance*(1+(0.034*Math.cos((mathtoradians(360/365.25)*jahrestag))))/einheitenfactor;
-	var sunrise = (-1)*Math.acos((-1*Math.tan(declinationnow))*Math.tan(mathtoradians(latitude)));
-	if (mathtoradians(latitude)<0){
-		if (isNaN(sunrise)){
-			if ((82<jahrestag) && (jahrestag<264)){
-		sunrise = sunrise;
-	} else {
-		sunrise = ((-1)*Math.PI);
-	}
-	}
-	} else {
-		if (isNaN(sunrise)){
-			if ((82<jahrestag) && (jahrestag<264)){
-		sunrise = ((-1)*Math.PI);
-	} else {
-		sunrise = sunrise;
-	}
-	}	
-	}
-	var sunset = Math.acos((-1*Math.tan(declinationnow))*Math.tan(mathtoradians(latitude)));
-	//console.log(sunset);
-	if (mathtoradians(latitude)<0){
-		if (isNaN(sunset)){
-			if ((82<jahrestag) && (jahrestag<264)){
-		sunset = sunset;
-	} else {
-		sunset = Math.PI;
-	}
-	}
-	} else {
-		if (isNaN(sunset)){
-			if ((82<jahrestag) && (jahrestag<264)){
-		sunset = Math.PI;
-	} else {
-		sunset = sunset;
-	}
-	}	
-	}
-	//console.log("Am "+ jahrestag + " sunrise um " + sunrise+" und sunset um "+ sunset);
-	//console.log("Am "+ jahrestag + " declination " + declinationnow +" und irradiancenow " + irradiancenow);
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
-		var houranglenow = zeitzuangle(tagesstunde);
-		var sunaltitude = Math.asin(((Math.sin(declinationnow)*Math.sin(mathtoradians(latitude)))+(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.cos(mathtoradians(latitude)))));
-		var azitemp = Math.acos(((Math.sin(declinationnow)*Math.cos(mathtoradians(latitude)))-(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.sin(mathtoradians(latitude))))/Math.cos(sunaltitude));
-		var sunazimutnow;
-				if(latitude<0){
-		if (Math.sin(houranglenow)==0){
-			sunazimutnow=0;	
-			}
-		else if (Math.sin(houranglenow)>0){
-				sunazimutnow=azitemp;
-		} else {
-		sunazimutnow=(2*Math.PI)-azitemp;
-		}}else{
-			if (Math.sin(houranglenow)==0){
-				sunazimutnow=Math.PI;
-			} else if (Math.sin(houranglenow)>0){
-			sunazimutnow=(2*Math.PI)-azitemp;
-		} else {
-			sunazimutnow=azitemp;
-		}
 			
-		}
-		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tilt))+(Math.cos(sunaltitude)*Math.sin(tilt)*Math.cos(moduleazirad-sunazimutnow))), -6);
-			//	console.log("part 1 "+(Math.sin(sunaltitude)*Math.cos(tilt))+" part2 "+(Math.cos(sunaltitude)*Math.sin(tilt)*Math.cos(moduleazirad-sunazimutnow))+" und des noamal"+Math.cos(moduleazirad-sunazimutnow));
-				//console.log("part 3 "+Math.sin(sunaltitude)+" part2 "+Math.cos(tilt)+" und des noamal "+Math.cos(sunaltitude)+" und "+Math.sin(tilt));
-		//console.log("moduleazi "+moduleazirad+ " houranglenow " + houranglenow+ " sunaltitude "+sunaltitude+ " sunazimutnow "+sunazimutnow+" cosdeta "+cosdeta);
-		if(cosdeta>=0){
-			if(sunrise<=houranglenow && houranglenow<=sunset){
-			clearskymonthlyhorizontal[month]+=Math.round10((cosdeta*irradiancenow), -4);
-				if ((82==jahrestag) && (tagesstunde==9)){	
-				//console.log("Die clearStrahlung am "+jahrestag+"."+month+" um "+tagesstunde+ " " +houranglenow+" hourangle, beträgt "+clearskyhourly[jahrestag][tagesstunde]+ " tilt = "+tilt+"und cosdeta "+ cosdeta+ " sunaltitude "+sunaltitude+" azitemp "+azitemp+" sunazimutnow" +sunazimutnow);
-				}
 			}
 		}
 	}
+}
+resultscsv[0] = cosdetahourly;
+resultscsv[1] = sunazimuthhourly;
+resultscsv[2] = sunaltitudehourly;
+resultscsv[3] = clearskyhourly;
+resultscsv[4] = clearskydaily;
+resultscsv[5] = clearskymonthly;
+resultscsv[6] = summe;
+return (resultscsv);
 }
 
-	return (clearskymonthlyhorizontal);
-}
-function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower){
+function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock){
+	    if (sunblock === undefined) {
+          sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+	//console.log(realskyaverage);
 	moduleazirad = mathtoradians(moduleazi);
 	tiltrad = mathtoradians(tilt);
 	//console.log(latitude + " =latitude " + moduleazi + " =moduleazi " +tilt+ " =tilt");
-	var horizontal=0;
+	// declare objects properly and clean in the right scope
+	var resultscsv = new Array (4);
+	var realskymonthly= new Array(13);
+	for (var i=0; i<13; i++){
+		realskymonthly[i]= 0;
+	}
+	var realskyhourly= new Array(366);
 	for (var i=0; i<366; i++){
 	realskyhourly[i]= new Array(24);
-}
-	for (var i=0; i<366; i++){
-	cosdetahourly[i]= new Array(24);
-}
-	for (var i=0; i<366; i++){
-	sunaltitudehourly[i]= new Array(24);
-}
-	for (var i=0; i<366; i++){
-	sunazimuthhourly[i]= new Array(24);
-}
-	for (var i=0; i<13; i++){
-	realskymonthly[i]= 0;
-}
-realsumme =0;
-	var clearskymonthlyhorizontal = getclearskymonthlyhorizontal(latitude, moduleazi);
+	}
+	var realskydaily= new Array(366);
+	var realsumme =0;
+	var clearsky = ClearskyValue(latitude, 0, moduleazi);
+	var clearskymonthlyhorizontal= clearsky[5]
 	//console.log(clearskymonthlyhorizontal);
-	var clearskymonthly = getclearskymonthly(latitude, tilt, moduleazi);
-	//console.log(clearskymonthlyhorizontal);
+	
 	for (var jahrestag=1; jahrestag<=365;jahrestag++){
 	realskydaily[jahrestag]=0;
 	var month=jahrestagzumonat(jahrestag);
 	var slotfinder=(month-1);
-	monatstage=monatzumonatstage(month);
+	var monatstage=monatzumonatstage(month);
 	var skyfactor = (realskyaverage[slotfinder]*1000)/(clearskymonthlyhorizontal[month]/monatstage);
-	skyfacmonthly[month]=skyfactor;
 	//console.log("im " +month+ "ten Monat realskyaverage "+ realskyaverage[slotfinder]+ " clearskymonthly "+ clearskymonthlyhorizontal[month]+ " skyfactor "+ skyfactor);
 	var declinationnow = declination(jahrestag);
 	var irradiancenow= irradiance*(1+(0.034*Math.cos((mathtoradians(360/365.25)*jahrestag))));
@@ -480,11 +386,8 @@ realsumme =0;
 	}
 	//console.log("Am "+ jahrestag + " sunrise um " + sunrise+" und sunset um "+ sunset);
 	//console.log("Am "+ jahrestag + " declination " + declinationnow);
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
+	for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
 		realskyhourly[jahrestag][tagesstunde]=0;
-		sunaltitudehourly[jahrestag][tagesstunde]=0;
-		sunazimuthhourly[jahrestag][tagesstunde]=0;
-		cosdetahourly[jahrestag][tagesstunde]=0;
 		var houranglenow = zeitzuangle(tagesstunde);
 		var sunaltitude = Math.asin(((Math.sin(declinationnow)*Math.sin(mathtoradians(latitude)))+(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.cos(mathtoradians(latitude)))));
 		var azitemp = Math.acos(((Math.sin(declinationnow)*Math.cos(mathtoradians(latitude)))-(Math.cos(declinationnow)*Math.cos(houranglenow)*Math.sin(mathtoradians(latitude))))/Math.cos(sunaltitude));
@@ -508,250 +411,232 @@ realsumme =0;
 			
 		}
 		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
-		cosdetahourly[jahrestag][tagesstunde]=Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
-		sunazimuthhourly[jahrestag][tagesstunde]=Math.round10(sunazimutnow, -2);
-		sunaltitudehourly[jahrestag][tagesstunde]=Math.round10(sunaltitude, -2);
-		//console.log("part 1 "+(Math.sin(sunaltitude)*Math.cos(tiltrad))+" part2 "+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))+" und des noamal"+Math.cos(moduleazirad-sunazimutnow));
-		//console.log("part 3 "+Math.sin(sunaltitude)+" part2 "+Math.cos(tiltrad)+" und des noamal "+Math.cos(sunaltitude)+" und "+Math.sin(tiltrad));
-		//console.log("moduleazi "+moduleazirad+ " houranglenow " + houranglenow+ " sunaltitude "+sunaltitude+ " sunazimutnow "+sunazimutnow+" cosdeta "+cosdeta);
-		if(cosdeta>=0){
-			if(sunrise<=houranglenow && houranglenow<=sunset){
-				realskyhourly[jahrestag][tagesstunde]=Math.round10((cosdeta*irradiancenow*skyfactor*effizienzreel*ratedpower/1000), -4);
-				realsumme +=(cosdeta*irradiancenow*ratedpower*effizienzreel*skyfactor/1000);
-				realskydaily[jahrestag] += Math.round10((cosdeta*irradiancenow*effizienzreel*ratedpower*skyfactor/1000), -2);
-				realskymonthly[month] += Math.round10((cosdeta*irradiancenow*effizienzreel*ratedpower*skyfactor/1000), -4);
-			if ((82==jahrestag) && (tagesstunde>9)){	
-			//console.log("Die realStrahlung am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+realskyhourly[jahrestag][tagesstunde]+" tilt = "+tilt+" und cosdeta "+ cosdeta+ " sunaltitude "+sunaltitude+" azitemp "+azitemp+" sunazimutnow" +sunazimutnow);
-			//console.log(" um "+tagesstunde+" realskyhourly " +realskyhourly[jahrestag][tagesstunde]+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskyhourly[jahrestag][tagesstunde]+ " aber ist "+(realskyhourly[jahrestag][tagesstunde]/(skyfactor*effizienzreel)));
-			}
-			}
+		var j;
+		if(moduleazi<=90){
+		if(houranglenow>=(moduleazirad+(3*Math.PI/2))){
+			j=0;
 		}
-	}
-	//console.log("realskymonthly " +realskymonthly[month]+" am "+jahrestag+"."+month+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskymonthly[month]+ " aber ist "+(realskymonthly[month]/(skyfactor*effizienzreel)));
-	//console.log("realskydaily " +realskydaily[jahrestag]+" am "+jahrestag+"."+month+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskydaily[jahrestag]+ " aber ist "+(realskydaily[jahrestag]/(skyfactor*effizienzreel)));
-}
-}
-function getrealskydaily(latitude, realskyaverage, tilt, moduleazi, ratedpower){
-	RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-	//console.log(skyfacmonthly);
-	return (realskydaily);
-}
-function getrealskyhourly(latitude, realskyaverage, tilt, moduleazi, ratedpower){
-	RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-	return (realskyhourly);
-}
-function getrealskymonthly(latitude, realskyaverage, tilt, moduleazi, ratedpower){
-	RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-	return (realskymonthly);
-}
-function getsunaltitudehourly(latitude, realskyaverage, tilt, moduleazi, ratedpower){
-	RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-	return (sunaltitudehourly);
-}
-function getsunazimuthhourly(latitude, realskyaverage, tilt, moduleazi, ratedpower){
-	RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-	return (sunazimuthhourly);
-}
-function CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende) {
-var einheitenfactor=1; //1000 für kWh
-verbraucher = verbraucher/einheitenfactor;
-//var cycletime = whpercycle/verbraucher // time per cycle in hours
-batterysize = crate(batterysize, verbraucher)/einheitenfactor;
-//console.log("batterysize = "+(batterysize)+ " Wh")
-var peakcycle = [];
-var basecycle=[];
-var increase;
-var cyclecounter=0;
-var cyclecounter2=0;
-//get cycles with realsky
-var realsky = getrealskyhourly(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
-	var month=jahrestagzumonat(jahrestag);
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
-	var	output= verbraucher* app[tagesstunde];
-	if (output==NaN){
-		//console.log("output NaN punkt statt komma bei dezimalstelle");
-	}
-		batterystatus[jahrestag][tagesstunde]=0;
-		switch(tagesstunde){
-		case 0:
-		if (jahrestag==anfang){
-			batterystatus[jahrestag][tagesstunde]=batterysize*0.8;
 		}else{
-			if ((((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23])-output)/batterysize)>0.99){
-		//console.log("batterystatus um "+(23)+" am "+(jahrestag-1)+"= " +batterystatus[jahrestag-1][23]+" realsky " +realsky[jahrestag-1][23]+ " output = "+output);
-			var decrease= (realsky[jahrestag-1][23]>output)? 0:(output-realsky[jahrestag-1][23]);
-			batterystatus[jahrestag][tagesstunde]=Math.round10(((batterysize*0.99)-decrease), -2);
-					if (output>0){
-						cyclecounter1 +=1;
-						//console.log("cyclecounter "+cyclecounter);
-					}
+			if(houranglenow>=(moduleazirad-(Math.PI/2))){
+			j=0;
 		}
-		else{
-			if (((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23]-output)/batterysize)>(0.10)){
-		//console.log("batterystatus um "+(23)+" am "+(jahrestag-1)+"= " +batterystatus[jahrestag-1][23]+" realsky " +realsky[jahrestag-1][23]+ " output = "+output);
-				increase = realsky[jahrestag-1][23]-output;
-					if (output>0){
-						cyclecounter +=1;
-						//console.log("cyclecounter "+cyclecounter);
-					}
-			}
-				else{
-					increase = realsky[jahrestag-1][23];
-					if (output>0){
-						cyclecounter2 +=1;
-						//console.log("cyclecounter2 "+cyclecounter2);
-					}
+		}
+		if(cosdeta>=0 && mathtoradians(sunblock[j])<=sunaltitude){
+				if(sunrise<=houranglenow && houranglenow<=sunset){
+					realskyhourly[jahrestag][tagesstunde]=Math.round10((cosdeta*irradiancenow*skyfactor*effizienzreel*ratedpower/1000), -4);
+					realsumme +=(cosdeta*irradiancenow*ratedpower*effizienzreel*skyfactor/1000);
+					realskydaily[jahrestag] += Math.round10((cosdeta*irradiancenow*effizienzreel*ratedpower*skyfactor/1000), -2);
+					realskymonthly[month] += Math.round10((cosdeta*irradiancenow*effizienzreel*ratedpower*skyfactor/1000), -4);
+				//console.log("Die realStrahlung am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+realskyhourly[jahrestag][tagesstunde]+" tilt = "+tilt+" und cosdeta "+ cosdeta+ " sunaltitude "+sunaltitude+" azitemp "+azitemp+" sunazimutnow" +sunazimutnow);
+				//console.log(" um "+tagesstunde+" realskyhourly " +realskyhourly[jahrestag][tagesstunde]+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskyhourly[jahrestag][tagesstunde]+ " aber ist "+(realskyhourly[jahrestag][tagesstunde]/(skyfactor*effizienzreel)));
 				}
-			batterystatus[jahrestag][tagesstunde]=Math.round10((batterystatus[jahrestag-1][23]+increase), -2);
-		}
-		}
-		break;
-		default:
-		if ((((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1])-output)/batterysize)>0.99){
-//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);			var decrease= (realsky[jahrestag][tagesstunde-1]>output)? 0:(output-realsky[jahrestag][tagesstunde-1]);
-		var decrease= (realsky[jahrestag][tagesstunde-1]>output)? 0:(output-realsky[jahrestag][tagesstunde-1]);
-			batterystatus[jahrestag][tagesstunde]=Math.round10(((batterysize*0.99)-decrease), -2);
-			if (output>0){
-						cyclecounter +=1;
-					//console.log("cyclecounter "+cyclecounter);
-					}
-		}
-		else{
-			if (((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1]-output)/batterysize)>(0.10)){
-//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);				increase = realsky[jahrestag][tagesstunde-1]-output;
-			increase = realsky[jahrestag][tagesstunde-1]-output;
-				if (output>0){
-						cyclecounter +=1;
-						//console.log("cyclecounter "+cyclecounter);
-					}
-			}
-				else{
-					increase = realsky[jahrestag][tagesstunde-1];
-//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);
-					if (output>0){
-						cyclecounter2 +=1;
-						//console.log("cyclecounter2 "+cyclecounter2);
-					}
-
+				if (j<=12){
+				j++;
 				}
-			batterystatus[jahrestag][tagesstunde]=Math.round10((batterystatus[jahrestag][tagesstunde-1]+increase), -2);
+			}
 		}
-		}
-		//console.log("Der Batteriestatus am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+(batterystatus[jahrestag][tagesstunde]));
-		}
-	peakcycle[jahrestag] = (realskydaily[jahrestag]/whpercycle);
-	//console.log("peakcycle am "+jahrestag+ " beträgt "+peakcycle[jahrestag]+" realsky "+realskydaily[jahrestag]);
-	basecycle[jahrestag] = cyclecounter - basecycle[jahrestag-1];
-	}
-	var basecycleyearly = Math.floor(cyclecounter/ende);
-	solarautarkie = cyclecounter/(cyclecounter+cyclecounter2);
+	//console.log("realskymonthly " +realskymonthly[month]+" am "+jahrestag+"."+month+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskymonthly[month]+ " aber ist "+(realskymonthly[month]/(effizienzreel*ratedpower*skyfactor/1000)));
+	//console.log("realskydaily " +realskydaily[jahrestag]+" am "+jahrestag+"."+month+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskydaily[jahrestag]+ " aber ist "+(realskydaily[jahrestag]/(effizienzreel*ratedpower*skyfactor/1000)));
 }
-function getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, ratedpower){
-		RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower);
+resultscsv[0] = realskyhourly;
+resultscsv[1] = realsumme;
+resultscsv[2] = realskydaily;
+resultscsv[3] = realskymonthly;
+return (resultscsv);
+}
+
+
+function getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock){
+		var realskyvalue= RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+		var realsumme = realskyvalue[1];
 	var maxcycles = Math.floor(realsumme/(whpercycle*365));
 	return (maxcycles);
 }
 
-function getbatterystatus(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende){
-		CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende);
-	return (batterystatus);
+function CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende, sunblock) {
+//var cycletime = whpercycle/verbraucher // time per cycle in hours
+batterysize = crate(batterysize, verbraucher);
+//console.log("batterysize = "+(batterysize)+ " Wh am: "+anfang);
+var batterystatus= new Array(366);
+for (var i=0; i<366; i++){
+	batterystatus[i]= new Array(24);
 }
-function getbasecyclesyearly(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, app, anfang, ende){
-		CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, app, anfang, ende);
-	return(basecycleyearly);
-}
-function getsolarautarkie(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende){
-		CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende);
-	return(solarautarkie);
-}
-function getzombiemode(latitude, tilt, moduleazi, ratedpower, batterysize, verbraucher, app, anfang, ende){
+var solarautarkie=0;
+var peakcycle = [];
+var basecycle=[0];
 var increase;
-var daycounter =0;
-batterysize = crate(batterysize,verbraucher)/einheitenfactor;
+var cyclecounter=0;
+var cyclecounter2=0;
 //get cycles with realsky
-var realsky = getrealskyhourly(latitude, nosun, tilt, moduleazi, ratedpower);
-	var month=jahrestagzumonat(jahrestag);
+var realskyvalue = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var realsky = realskyvalue[0];
+var realskydaily=realskyvalue[2]
+	for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
+		var month=jahrestagzumonat(jahrestag);
+		for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
+		var	output= verbraucher* app[tagesstunde];
+		if (output==NaN){
+			console.log("output NaN punkt statt komma bei dezimalstelle");
+		}
+			batterystatus[jahrestag][tagesstunde]=0;
+			switch(tagesstunde){
+			case 0:
+			if (jahrestag==anfang){
+				batterystatus[jahrestag][tagesstunde]=batterysize*0.8;
+			}else{
+				if ((((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23])-output)/batterysize)>0.99){
+			//console.log("batterystatus um "+(23)+" am "+(jahrestag-1)+"= " +batterystatus[jahrestag-1][23]+" realsky " +realsky[jahrestag-1][23]+ " output = "+output);
+				var decrease= (realsky[jahrestag-1][23]>output)? 0:(output-realsky[jahrestag-1][23]);
+				batterystatus[jahrestag][tagesstunde]=Math.round10(((batterysize*0.99)-decrease), -2);
+						if (output>0){
+							cyclecounter1 +=1;
+							//console.log("cyclecounter "+cyclecounter);
+						}
+			}
+			else{
+				if (((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23]-output)/batterysize)>(0.10)){
+			//console.log("batterystatus um "+(23)+" am "+(jahrestag-1)+"= " +batterystatus[jahrestag-1][23]+" realsky " +realsky[jahrestag-1][23]+ " output = "+output);
+					increase = realsky[jahrestag-1][23]-output;
+						if (output>0){
+							cyclecounter +=1;
+							//console.log("cyclecounter "+cyclecounter);
+						}
+				}
+					else{
+						increase = realsky[jahrestag-1][23];
+						if (output>0){
+							cyclecounter2 +=1;
+							//console.log("cyclecounter2 "+cyclecounter2);
+						}
+					}
+				batterystatus[jahrestag][tagesstunde]=Math.round10((batterystatus[jahrestag-1][23]+increase), -2);
+			}
+			}
+			break;
+			default:
+			if ((((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1])-output)/batterysize)>0.99){
+	//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);
+			decrease= (realsky[jahrestag][tagesstunde-1]>output)? 0:(output-realsky[jahrestag][tagesstunde-1]);
+				batterystatus[jahrestag][tagesstunde]=Math.round10(((batterysize*0.99)-decrease), -2);
+				if (output>0){
+							cyclecounter +=1;
+						//console.log("cyclecounter "+cyclecounter);
+						}
+			}
+			else{
+				if (((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1]-output)/batterysize)>(0.10)){
+	//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);				increase = realsky[jahrestag][tagesstunde-1]-output;
+				increase = realsky[jahrestag][tagesstunde-1]-output;
+					if (output>0){
+							cyclecounter +=1;
+							//console.log("cyclecounter "+cyclecounter);
+						}
+				}
+					else{
+						increase = realsky[jahrestag][tagesstunde-1];
+	//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);
+						if (output>0){
+							cyclecounter2 +=1;
+							//console.log("cyclecounter2 "+cyclecounter2);
+						}
+
+					}
+				batterystatus[jahrestag][tagesstunde]=Math.round10((batterystatus[jahrestag][tagesstunde-1]+increase), -2);
+			}
+			}
+			//console.log("Der Batteriestatus am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+(batterystatus[jahrestag][tagesstunde]));
+			}
+		peakcycle[jahrestag] = (realskydaily[jahrestag]/whpercycle);
+		basecycle[jahrestag] = cyclecounter - basecycle[jahrestag-1];
+		}
+	var basecycleyearly = Math.floor(cyclecounter/ende);
+	solarautarkie = cyclecounter/(cyclecounter+cyclecounter2);
+	var resultscsv = new Array (4);
+	resultscsv[0] = peakcycle;
+	resultscsv[1] = basecycle;
+	resultscsv[2] = solarautarkie;
+	resultscsv[3] = batterystatus;
+	console.log(resultscsv);
+return (resultscsv);
+}
+
+function getzombiemode(batterysize, verbraucher, app){
+
+var hourcounter =0;
+batterysize = crate(batterysize,verbraucher);
+var batterystatus= new Array(366);
+for (var i=0; i<366; i++){
+	batterystatus[i]= new Array(24);
+}
 jahresablauf:
-for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
-			daycounter +=1;
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
-	var	output= verbraucher*app[(tagesstunde+1)];
+for (var jahrestag=40; jahrestag<=365;jahrestag++){
+	var month=jahrestagzumonat(jahrestag);
+	for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
+		hourcounter +=1;
+	var	output= verbraucher*app[tagesstunde];
 		batterystatus[jahrestag][tagesstunde]=0;
 		switch(tagesstunde){
 		case 0:
-		if (jahrestag==anfang){
+		if (jahrestag==40){
 			batterystatus[jahrestag][tagesstunde]=batterysize;
 		}else{
-			if ((((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23])-output)/batterysize)>0.99){
-			var decrease= (realsky[jahrestag-1][23]>output)? 0:(output-realsky[jahrestag-1][23]);
-			batterystatus[jahrestag][tagesstunde]=(batterysize*0.99)-decrease;
-		}
-		else{
-			if ((batterystatus[jahrestag-1][23]+realsky[jahrestag-1][23]-output)>(0.10)){
-				increase = realsky[jahrestag-1][23]-output;
+			if (((batterystatus[jahrestag-1][23]-output)/batterysize)>(0.10)){
+				batterystatus[jahrestag][tagesstunde]=batterystatus[jahrestag-1][23]-output;
 			}
 				else{
-					increase = realsky[jahrestag-1][23];
-					if (output>0){
 						break jahresablauf;
-					}
+						//console.log("cas 0 break");
 				}
-			batterystatus[jahrestag][tagesstunde]=batterystatus[jahrestag-1][23]+increase;
-		}
 		}
 		break;
 		default:
-		if ((((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1])-output)/batterysize)>0.99){
-			var decrease= (realsky[jahrestag][tagesstunde-1]>output)? 0:(output-realsky[jahrestag][tagesstunde-1]);
-			batterystatus[jahrestag][tagesstunde]=(batterysize*0.99)-decrease;
-			if (output>0){
-					}
-		}
-		else{
-			if ((batterystatus[jahrestag][tagesstunde-1]+realsky[jahrestag][tagesstunde-1]-output)>(0.10)){
-				increase = realsky[jahrestag][tagesstunde-1]-output;
+								//console.log(tagesstunde);
+								//console.log(((batterystatus[jahrestag][tagesstunde-1]-output)/batterysize));
+			if (((batterystatus[jahrestag][tagesstunde-1]-output)/batterysize)>(0.10)){
+					
+					batterystatus[jahrestag][tagesstunde]=batterystatus[jahrestag][tagesstunde-1]-output;
 			}
 				else{
-					increase = realsky[jahrestag][tagesstunde-1];
+											//console.log("default break");
 						break jahresablauf;
 				}
-			batterystatus[jahrestag][tagesstunde]=batterystatus[jahrestag][tagesstunde-1]+increase;
 		}
-		}
-		//console.log("Der Batteriestatus am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+(batterystatus[jahrestag][tagesstunde]/batterysize*100));
-		}
+				//console.log("Der Batteriestatus am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+(batterystatus[jahrestag][tagesstunde]/batterysize*100));
 	}
-
-	return(daycounter);
+}
+	return(hourcounter);
 }
 
-function getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize){
+function getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, sunblock){
 var increase;
 var hourcounter=0;
-anfang=solmateday;
-anfangsstunde=solmatehour;
+var batterystatus= new Array(366);
+for (var i=0; i<366; i++){
+	batterystatus[i]= new Array(24);
+}
 for (var i=0; i<366; i++){
 	for (var b=0; b<24; b++){
 				batterystatus[i][b]=0;
 	}
 }
+var solmateday=getsolmateday();
 //console.log("day "+ solmateday+" hour "+solmatehour);
 //get cycles with realsky
-var realsky = getrealskyhourly(latitude, realskyaverage, tilt, moduleazi, ratedpower);
-if (anfang > 350){
-	anfang = 1;
+var realskyvalue = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var realsky = realskyvalue[0];
+if (solmateday > 350){
+	solmateday = 1;
 }
-ende = (anfang+60);
+ende = (solmateday+10);
 jahresablauf:
-for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
-	for (tagesstunde=0;tagesstunde<=23;tagesstunde++){
+for (var jahrestag=solmateday; jahrestag<=ende;jahrestag++){
+	for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
 /*if (tagesstunde < anfangsstunde){
 	console.log("skip until anfangstunde");
 }else{*/	
 		switch(tagesstunde){
 		case 0:
-		if (jahrestag==anfang && tagesstunde==anfangsstunde){
+		if (jahrestag==solmateday && tagesstunde==solmatehour){
 			batterystatus[jahrestag][tagesstunde]=batterysize*0;
 			hourcounter=0;			
 		}else{
@@ -765,11 +650,10 @@ for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
 					if (increase>0){
 						hourcounter+=1;
 					}
-			//System.out.println("increase by " +increase);
 		}
 		break;
 		default:
-		if (jahrestag==anfang && tagesstunde==anfangsstunde){
+		if (jahrestag==solmateday && tagesstunde==solmatehour){
 			batterystatus[jahrestag][tagesstunde]=batterysize*0;
 			hourcounter=0;
 		}else{
@@ -784,7 +668,6 @@ for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
 					if (increase>0){
 						hourcounter+=1;
 					}
-			//System.out.println("increase by " +increase);
 		}
 			}
 		//console.log("Der Batteriestatus am "+jahrestag+" um "+tagesstunde+" beträgt "+batterystatus[jahrestag][tagesstunde]);
