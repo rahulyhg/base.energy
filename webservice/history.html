@@ -53,16 +53,18 @@ function getHistory (sender, from, to) {
 		dataType: "json",
 		success: function(data){
 			//console.log(data);
-			var labels = ["timestamp", "volt", "amps", "relay", "signal"];
+			var labels = ["sendtime", "volt", "amps", "voltamps"];
 			drawTable(labels, data);
 			
 			// prepare data for charts js
 			var chartData = new Array();
+			var chartLabels = new Array();
 			
 			for (var i=0; i<data.length; i++) {
-				chartData[i] = data[i][1] // we want volts in our diagram
+				chartLabels[i] = data[i][0]; // timeslice is for x axis labels
+				chartData[i] = data[i][1]; // we want volts in our diagram
 			}
-			drawChart(new Array (chartData.length), chartData);
+			drawChart(chartLabels, chartData);
 			
 		},
 		failure: function(errMsg) {
@@ -127,14 +129,14 @@ function drawChart (labels, data) {
 		data: {
 			labels: labels,
 			datasets: [{
-				//label: '# of Votes',
+				label: 'avg(volt)',
 				data: data,
 				borderWidth: 1
 			}]
 		},
 		options: {
 			legend: {
-				display: false
+				display: true
 			},
 			scales: {
 				yAxes: [{

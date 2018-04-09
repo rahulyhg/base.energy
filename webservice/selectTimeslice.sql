@@ -3,8 +3,8 @@ SELECT d.timeslice
      , TRUNCATE(AVG(h.amps), 2) AS amps
      , TRUNCATE(volt * amps, 2) AS voltamps
   FROM ( SELECT min_date + INTERVAL n*1 HOUR AS timeslice
-           FROM ( SELECT DATE('2018-04-08') AS min_date
-                       , DATE('2018-04-12') AS max_date ) AS m
+           FROM ( SELECT DATETIME('2018-04-08 10:00:00') AS min_date
+                       , DATETIME('2018-04-12 12:00:00') AS max_date ) AS m
          CROSS
            JOIN numbers
           WHERE min_date + INTERVAL n*1 HOUR <= max_date

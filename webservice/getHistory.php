@@ -45,8 +45,27 @@ try {
 	// get variable $conn with access to mysql
 	include('dbaccess.php');
 	
-	// SELECT sendtime, volt, amps, relay, gsmsignal FROM healthlog WHERE sendtime BETWEEN '2018-04-06 00:00:00' AND '2018-04-08 00:00:00' ORDER BY sendtime;
-	$sth = $conn->prepare("SELECT sendtime, volt, amps, relay, gsmsignal FROM healthlog WHERE sendtime BETWEEN '$from' AND '$to' ORDER BY sendtime;");
+	// see selectTimeslice.sql sample
+	$q = "
+		SELECT d.timeslice
+			 , TRUNCATE(AVG(h.volt), 2) AS volt
+			 , TRUNCATE(AVG(h.amps), 2) AS amps
+			 , TRUNCATE(volt * amps, 2) AS voltamps
+		  FROM ( SELECT min_date + INTERVAL n*1 HOUR AS timeslice
+				   FROM ( SELECT TIMESTAMP('$from') AS min_date
+							   , TIMESTAMP('$to') AS max_date ) AS m
+				 CROSS
+				   JOIN numbers
+				  WHERE min_date + INTERVAL n*1 HOUR <= max_date
+			   ) AS d
+		LEFT
+		  JOIN healthlog AS h
+			ON h.sendtime BETWEEN d.timeslice
+								AND d.timeslice + INTERVAL 1 HOUR
+		GROUP BY d.timeslice";
+	
+	
+	$sth = $conn->prepare($q);
 	$sth->execute();
 	$result = $sth->fetchAll(PDO::FETCH_NUM);
 	
