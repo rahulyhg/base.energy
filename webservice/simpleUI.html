@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="../css/nouislider.min.css" rel="stylesheet">
+<style>
+.behaelter {
+margin-left: 50px;
+}
+.schieber{
+	margin: 8px;
+	display: inline-block;
+	height: 150px;
+}
+.sliders{
+	margin: 8px;
+	display: inline-block;
+	height: 150px;
+}
+.noUi-tooltip {
+    display: none;
+}
+.noUi-active .noUi-tooltip {
+    display: block;
+}
+#autarkitable {
+    border-collapse: collapse;
+    width: 100%;
+		font-family:    Tahoma;
+}
+
+autarkitable {
+	border: 1px solid #ddd;
+}
+#autarkitable td {
+	font-size: 12px;
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+#autarkitable th:hover {background-color: #E7EFF7;}
+#autarkitable td:hover {background-color: #E7EFF7;}
+
+#autarkitable th {
+	    width: 200px;
+	font-weight: 900;
+	font-size: 12px;
+	padding: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #E6E6E6;
+    color: #505050;
+	border: 1px solid #ddd;
+}
+</style>
+</head>
+<body>
+<script src="../js/nouislider.min.js"></script>
+<form action="#">
+anfang:
+<input id="anfang" type="text" name="anfang">
+Ende:
+<input id="ende" type="text" name="ende" size="5"> 
+Lat:
+<input id="latitude" value="48.19" type="text" name="latitude" size="5">
+longitude:
+<input id="longitude" value="16" type="text" name="longitude" size="5">
+Tilt:
+<input id="tilt" value="90" type="text" name="tilt" size="5">
+ModuleAzi:
+<input id="moduleazi" value="210" type="text" name="moduleazi" size="5">
+<br>
+<br>
+  <input type="radio" name="gender" onClick="setyear()"> ganzes Jahr
+  <input type="radio" name="gender" onClick="setwowinter()"> ohne Winter
+ <br>
+ <br>
+<div id="html5Slider"></div><br>
+
+
+Verbraucher in Watt:
+<input id="verbraucher" value="150" type="number" name="verbraucher" size="5">
+
+Wattstunden per Cycle:
+<input id="whpercycle" value="100" type="number" name="whpercycle" size="5"><br></br>
+ 
+<select id="profilauswahl" onload="refreshprofil()" onchange="refreshprofil()">
+  <option value="0">Erstelle app-profil</option>
+  <option value="0">light</option>
+  <option value="1">smartphone</option>
+  <option value="2">E-bike</option>
+  <option value="3">workmusic</option>
+  <option value="4">nightmusic</option>
+  <option value="5">fridge</option>
+  <option value="6">wasserpumpe</option>
+  <option value="7">multimediaecke</option>
+  <option value="8">coffee</option>
+  <option value="9">säge</option>
+  <option value="10">küchenmaschine</option>
+  <option value="11">ventilator</option>
+</select><br><br>
+<div class="behaelter">
+1<div class="sliders" id="0"></div>
+2<div class="sliders" id="1"></div>
+3<div class="sliders" id="2"></div>
+4<div class="sliders" id="3"></div>
+5<div class="sliders" id="4"></div>
+6<div class="sliders" id="5"></div>
+7<div class="sliders" id="6"></div>
+8<div class="sliders" id="7"></div>
+9<div class="sliders" id="8"></div>
+10<div class="sliders" id="9"></div>
+11<div class="sliders" id="10"></div>
+12<div class="sliders" id="11"></div>
+13<div class="sliders" id="12"></div>
+14<div class="sliders" id="13"></div>
+15<div class="sliders" id="14"></div>
+16<div class="sliders" id="15"></div>
+17<div class="sliders" id="16"></div>
+18<div class="sliders" id="17"></div>
+19<div class="sliders" id="18"></div>
+20<div class="sliders" id="19"></div>
+21<div class="sliders" id="20"></div>
+22<div class="sliders" id="21"></div>
+23<div class="sliders" id="22"></div>
+24<div class="sliders" id="23"></div>
+</div><br>
+<br>
+Erstelle horizontal file
+<select id="horizontauswahl" onload="refreshhorizon()" onchange="refreshhorizon()">
+  <option value="0">Ebene</option>
+  <option value="1">Aspangstrasse</option>
+  </select><br><br>
+<div class="behaelter">
+0<div title="0" class="schieber" id="24"></div>
+15<div class="schieber" id="25"></div>
+30<div class="schieber" id="26"></div>
+45<div class="schieber" id="27"></div>
+60<div class="schieber" id="28"></div>
+75<div class="schieber" id="29"></div>
+90<div class="schieber" id="30"></div>
+105<div class="schieber" id="31"></div>
+120<div class="schieber" id="32"></div>
+135<div class="schieber" id="33"></div>
+150<div class="schieber" id="34"></div>
+165<div class="schieber" id="35"></div>
+180<div class="schieber" id="36"></div>
+</div><br>
+</form> 
+<input type="submit" value="start" onClick="anfangarsch()"><br>
+<br>
+<table id="autarkitable">
+  <tr>
+    <th id="überschrift">solare Autarkie</th>
+    <th>PV 100W</th>
+	<th>PV 150W</th>
+	<th>PV 200W</th>
+	<th>PV 250W</th>
+	<th>PV 300W</th>
+	<th>PV 500W</th>
+  </tr>
+  <tr>
+    <th>Capacity 18Ah = 216 Wh</th>
+    <td id="18100w">tbc</td>
+    <td id="18150w">tbc</td>
+    <td id="18200w">tbc tbc</td>
+    <td id="18250w">tbc tbc</td>
+    <td id="18300w">tbc tbc</td>
+    <td id="18500w">tbc tbc</td>
+  </tr>
+  <tr>
+    <th>Capacity 38Ah = 456 Wh</th>
+    <td id="38100w">tbc</td>
+    <td id="38150w">tbc</td>
+    <td id="38200w">tbc tbc</td>
+    <td id="38250w">tbc tbc</td>
+    <td id="38300w">tbc tbc</td>
+    <td id="38500w">tbc tbc</td>
+  </tr>
+  <tr>
+    <th>Capacity 60Ah = 720 Wh</th>
+    <td id="60100w">tbc</td>
+    <td id="60150w">tbc</td>
+    <td id="60200w">tbc tbc</td>
+    <td id="60250w">tbc tbc</td>
+    <td id="60300w">tbc tbc</td>
+    <td id="60500w">tbc tbc</td>
+  </tr>
+    <tr>
+    <th>Capacity 120Ah = 1440 Wh</th>
+    <td id="120100w">tbc</td>
+    <td id="120150w">tbc</td>
+    <td id="120200w">tbc tbc</td>
+    <td id="120250w">tbc tbc</td>
+    <td id="120300w">tbc tbc</td>
+    <td id="120500w">tbc tbc</td>
+  </tr>
+</table><br>
+<br>
+batterysize:
+<input id="batterysize" value="216" type="number" name="batterysize" size="5">
+
+ratedpower in Wattpeak:
+<input id="ratedpower" value="150" type="number" name="ratedpower" size="5"> <br>
+yscale-daily:
+<input id="yscale" value="0.2" type="number" name="yscale" size="5">
+yscale-yearly:
+<input id="yscalerealsky" value="2" type="number" name="yscalerealsky" size="5">
+yscale clearsky
+<input id="yscaleclearsky" value="30" type="number" name="yscalerealsky" size="5">
+<div id="canvas1" style="width:300px;height:440px;"></div>
+<div id="canvas2" style="width:400px;height:440px;"></div>
+<div id="canvas3" style="width:400px;height:440px;"></div>
+<div id="canvas4" style="width:500px;height:440px;"></div>
+<div id="canvas5" style="width:600px;height:440px;"></div>
+<div id="textbox" style="width:1000px;height:440px;"></div>
+<!--script src="../js/realskyaverage_GHI.js"></script-->
+
+<script>
+var startingday = document.getElementById('anfang');
+var endday = document.getElementById('ende');
+
+function setyear(){
+html5Slider.noUiSlider.set([1, 365]);
+}
+function setwowinter(){
+html5Slider.noUiSlider.set([81, 264]);
+}
+var html5Slider = document.getElementById('html5Slider');
+
+noUiSlider.create(html5Slider, {
+    start: [81, 264],
+    connect: true,
+	tooltips: [ false, false ],
+	step: 1,
+    range: {
+        'min': 1,
+        'max': 365
+    }
+});
+
+html5Slider.noUiSlider.on('update', function( values, handle ) {
+
+	var value = values[handle];
+
+	if ( handle ) {
+		endday.value = value;
+	} else {
+		startingday.value = value;
+	}
+});
+
+startingday.addEventListener('change', function(){
+	html5Slider.noUiSlider.set([this.value, null]);
+});
+
+endday.addEventListener('change', function(){
+	html5Slider.noUiSlider.set([null, this.value]);
+});
+
+var sliders = document.getElementsByClassName('sliders');
+
+[].slice.call(sliders).forEach(function( slider, index ){
+
+	noUiSlider.create(slider, {
+		start: 1,
+		connect: false,
+		orientation: "vertical",
+		tooltips: [true],
+		direction: 'rtl',
+		range: {
+			'min': 0,
+			'max': 1
+		},
+		pips: {
+		mode: 'range',
+		density: 3
+	}
+		});
+	});
+
+var app = new Array(16);
+//24hours:1	,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 light
+app[0] = [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 15];
+//24hours:1    ,2   ,3     ,4    ,5    ,6    ,7   , 8    , 9   , 10  ,11   ,12    ,13  ,14   ,15   ,16   ,17    ,18  ,19   ,20  ,21  ,22  ,23  ,24 sellphone
+app[1] = [0.19, 0.19, 0.19, 0.19, 0.19, 0.19, 0.38, 0.38, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.38, 0.38, 0.38, 0.38,0.38, 0.7, 0.5, 0.19, 0.19, 15];
+//24hours:1	,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 E-bike
+app[2] = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.93, 0.96, 1, 0.5, 0, 0, 0, 100];
+//24hours:1	,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 workmusic
+app[3] = [ 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 30];
+//24hours:1	,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 nightmusic
+app[4] = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 30];
+//24hours:1    ,2   ,3     ,4    ,5    ,6    ,7   , 8    , 9   , 10  ,11   ,12    ,13  ,14   ,15   ,16   ,17    ,18  ,19   ,20  ,21  ,22  ,23  ,24 fridge
+app[5] = [0.31, 0.32, 0.35, 0.36, 0.35, 0.5, 0.42, 0.53, 0.52, 0.48, 0.59, 0.49, 0.6, 0.58, 0.57, 0.40, 0.36, 0.37, 0.45, 0.41, 0.37, 0.36, 0.40, 0.37, 150];
+//24hours:			1	,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 poolpump
+app[6] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 300];
+//24hours: 1    ,2   ,3     ,4    ,5    ,6    ,7   , 8    , 9   , 10  ,11   ,12    ,13  ,14   ,15   ,16   ,17    ,18  ,19   ,20  ,21  ,22  ,23  ,24 multimediaecke
+app[7] = [0.26, 0.16, 0.18, 0.19, 0.18, 0.14, 0.14, 0.17, 0.17, 0.14, 0.14, 0.15, 0.19, 0.23, 0.68, 0.35, 0.14, 0.14, 0.63, 0.80, 0.79, 0.78, 0.67, 0.25, 100];
+//24hours:1 ,2 ,3 ,4, 5.   6,  7, 8, 9, 10,11,12,13,  14,15,16,17,18,19,  20,21,22,23,24 wasserkocher
+app[8] = [0, 0, 0, 0, 0, 0.13, 0, 0, 0, 0, 0, 0, 0, 0.13, 0, 0, 0,0, 0, 0.13, 0, 0, 0, 0, 1000];
+//24hours:			1 ,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16, 17,18,19,20,21,22,23,24 säge
+app[9] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.3, 0, 0, 0, 0, 0, 0, 500];
+//24hours:			 1 ,2 ,3 ,4, 5. 6, 7, 8, 	9, 		10 ,11  ,12  ,13   ,14    ,15   ,16   ,17,18,19,20,21,22,23,24 küchenmaschine
+app[10] = [0, 0, 0, 0, 0, 0, 0, 0.25, 0.25, 0.25, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25, 0.25, 0, 0, 0, 0, 0, 0, 0, 40];
+//24hours:			1  ,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 ventilator
+app[11] = [1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 30];
+//24hours:			1  ,2 ,3 ,4, 5. 6, 7, 8, 9, 10,11,12,13,14,15,16,17,   18,   19,20,  21,22,23,24 E-bike
+app[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.93, 0.96, 1, 0.5, 0, 0, 0];
+
+var horizon =new Array(13);
+horizon[0]=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
+horizon[1]=[0, 0, 30, 40, 45, 45, 45, 40, 45, 60, 60, 60, 60];
+	
+function refreshprofil(){
+for (var i=0; i<24; i++){
+	var regler = document.getElementById(i);
+	profilauswahl=document.getElementById('profilauswahl').value;
+	profilersteller=app[profilauswahl][i];
+	regler.noUiSlider.set(profilersteller);
+}
+var verbraucher = document.getElementById('verbraucher');
+verbraucher.value = app[profilauswahl][24];
+};
+
+function refreshhorizon(){
+	var j = 0;
+for (var x=24; x<37; x++){
+	var regulator = document.getElementById(x);
+	horizontauswahl=document.getElementById('horizontauswahl').value;
+	horizontersteller=horizon[horizontauswahl][j];
+	regulator.noUiSlider.set(horizontersteller);
+	j++
+}
+};
+
+var schieber = document.getElementsByClassName('schieber');
+
+[].slice.call(schieber).forEach(function( slider, index ){
+
+	noUiSlider.create(slider, {
+		start: 0,
+		connect: false,
+		orientation: "vertical",
+		tooltips: [true],
+		direction: 'rtl',
+		range: {
+			'min': 0,
+			'max': 90
+		},
+		pips: {
+		mode: 'range',
+		density: 3
+	}
+		});
+	});
+
+function anfangarsch(){
+
+var latitude = document.getElementById('latitude').value;
+var longitude = document.getElementById('longitude').value;
+getGhi(latitude,longitude);
+}
+
+function getGhi(lat, lng)
+{
+    var request = {
+				lat: lat,
+				lng: lng
+	};
+    var json = JSON.stringify(request);
+    $.ajax({
+      type: "POST",
+      dataType: "JSON",
+      url: "https://base.energy/webservice/getGhi.php", //Relative or absolute path to response.php file
+      data: json,
+      success: function(realskyaverage) {
+
+		showrealsky(realskyaverage);
+		showrealskyyearly(realskyaverage);
+		showclearskyyearly(realskyaverage);
+		showhorizont(realskyaverage);
+		showbatterystatus(realskyaverage);
+		showtherest(realskyaverage, 216, 100, "18100w");
+		showtherest(realskyaverage, 216, 150, "18150w");
+		showtherest(realskyaverage, 216, 200, "18200w");
+		showtherest(realskyaverage, 216, 250, "18250w");
+		showtherest(realskyaverage, 216, 300, "18300w");
+		showtherest(realskyaverage, 216, 500, "18500w");
+		showtherest(realskyaverage, 456, 100, "38100w");
+		showtherest(realskyaverage, 456, 150, "38150w");
+		showtherest(realskyaverage, 456, 200, "38200w");
+		showtherest(realskyaverage, 456, 250, "38250w");
+		showtherest(realskyaverage, 456, 300, "38300w");
+		showtherest(realskyaverage, 456, 500, "38500w");
+		showtherest(realskyaverage, 720, 100, "60100w");
+		showtherest(realskyaverage, 720, 150, "60150w");
+		showtherest(realskyaverage, 720, 200, "60200w");
+		showtherest(realskyaverage, 720, 250, "60250w");
+		showtherest(realskyaverage, 720, 300, "60300w");
+		showtherest(realskyaverage, 720, 500, "60500w");
+		showtherest(realskyaverage, 1440, 100, "120100w");
+		showtherest(realskyaverage, 1440, 150, "120150w");
+		showtherest(realskyaverage, 1440, 200, "120200w");
+		showtherest(realskyaverage, 1440, 250, "120250w");
+		showtherest(realskyaverage, 1440, 300, "120300w");
+		showtherest(realskyaverage, 1440, 500, "120500w");
+	   
+      }
+    });
+} // end getGhi
+
+/*function download(data) {
+console.log(data);
+
+	/* this is here to download data
+	var data = realskyarray2;
+	var csvContent = "data:text/csv;charset=utf-8,";
+	for (i=0;i<data.length;i++) {
+		csvContent += data[i]+ "\n";
+	
+	}
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("download", "realskydaily_tilt"+tilt+"_azi"+moduleazi+"_latlong"+latitude+"_"+longitude+"_"+ratedpower+"kWp.csv");
+	document.body.appendChild(link); // Required for FF
+
+	link.click();*/
+	
+	/*var data = batteryarray;
+	var csvContent = "data:text/csv;charset=utf-8,";
+	//csvContent += ""
+	data.forEach(function(infoArray, index){
+
+	   dataString = infoArray.join(";");
+	   csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+	});
+
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	//link.setAttribute("download", "realskyhourly_tilt"+tilt+"_azi"+moduleazi+"_latlong"+latitude+"_"+longitude+"_"+ratedpower+"kWp.csv");
+	link.setAttribute("download", "batteryarray_verbraucher"+verbraucher+"_apnumber"+appnumber+"_batterysize"+batterysize+"_"+ratedpower+"kWp.csv");
+	document.body.appendChild(link); // Required for FF
+
+	link.click();
+}*/
+//Converts from radians to degrees.
+Math.degrees = function(radians) {
+  return radians * 180 / Math.PI;
+}
+
+function showbatterystatus(realskyaverage){
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var anfang = (document.getElementById('anfang').value);
+var ende = document.getElementById('ende').value;
+var verbraucher = document.getElementById('verbraucher').value;
+var ratedpower = document.getElementById('ratedpower').value;
+var whpercycle = document.getElementById('whpercycle').value;
+var batterysize = document.getElementById('batterysize').value;
+
+var appprofil = new Array(24);
+for (var i=0; i<24; i++){
+	var wert = document.getElementById(i);
+	appprofil[i]=wert.noUiSlider.get();
+}
+var sunblock = new Array(13);
+for (var i=0; i<13; i++){
+	var counter = (i+24);
+	derwert = document.getElementById(counter);
+	sunblock[i]= derwert.noUiSlider.get();
+}
+
+var realsky = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var realskyarray = realsky[0];
+var battery = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
+var batteryarray = battery[3];
+console.log(batteryarray);
+drawbatterystatus(batteryarray, realskyarray);
+}
+
+function showrealsky(realskyaverage) {
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var ratedpower = document.getElementById('ratedpower').value;
+var sunblock = new Array(13);
+for (var i=0; i<13; i++){
+	var counter = (i+24);
+	derwert = document.getElementById(counter);
+	sunblock[i]= derwert.noUiSlider.get();
+}
+
+var realskyarray = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var realsky = realskyarray[0];
+drawrealsky(realsky);
+}
+
+function showrealskyyearly(realskyaverage) {
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var ratedpower = document.getElementById('ratedpower').value;
+
+var sunblock = new Array(13);
+for (var i=0; i<13; i++){
+	var counter = (i+24);
+	derwert = document.getElementById(counter);
+	sunblock[i]= derwert.noUiSlider.get();
+}
+var realskyarray = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var realsky = realskyarray[2];
+//console.log(realsky);
+drawrealskyyearly(realsky);
+}
+
+function showhorizont(realskyaverage) {
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var ratedpower = document.getElementById('ratedpower').value;
+var sunblock = new Array(13);
+for (var i=0; i<13; i++){
+	var counter = (i+24);
+	derwert = document.getElementById(counter);
+	sunblock[i]= derwert.noUiSlider.get();
+}
+
+var clearskyvalue = ClearskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var sunalti = clearskyvalue[2];
+drawhorizont(sunalti, sunblock);
+}
+
+function showtherest(realskyaverage, batterysize, ratedpower, target){
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var anfang = (document.getElementById('anfang').value*1);
+var ende = document.getElementById('ende').value;
+var verbraucher = document.getElementById('verbraucher').value;
+var whpercycle = document.getElementById('whpercycle').value;
+
+var appprofil = new Array(24);
+for (var i=0; i<24; i++){
+	var wert = document.getElementById(i);
+	appprofil[i]=wert.noUiSlider.get();
+}
+
+var sunblock = new Array(13);
+for (var i=0; i<13; i++){
+	var counter = (i+24);
+	derwert = document.getElementById(counter);
+	sunblock[i]= derwert.noUiSlider.get();
+}
+var zombieapo=getzombiemode(batterysize, verbraucher, appprofil);
+//console.log("zombieapocalypsemode " +zombieapo);
+var chargetime=getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, sunblock);
+//console.log("chargetime is " + chargetime);
+var peakcycle = getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+//console.log("peakcycle "+peakcycle);
+var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
+var solarautarkie = cyclecounter[2];
+//console.log("solarautarkie = "+(solarautarkie*100)+"%");
+//textbox.textContent = ("zombieapocalypsemode " +zombieapo+ " chargetime is " + chargetime+ " peakcycle "+peakcycle+ " solarautarkie = "+(solarautarkie*100)+"%");         // Sets the text content
+//document.body.appendChild(textbox);
+document.getElementById(target).innerHTML = "zombieapocalypsemode " + zombieapo + "<br> chargetime needed (h) " + chargetime+ "<br>solarautarkie = "+Math.round(solarautarkie*100)+"%";
+}
+
+function drawbatterystatus(batteryarray, realskyarray){
+	var anfang = (document.getElementById('anfang').value*1);
+    var gr=new jsGraphics(document.getElementById("canvas5"));
+    gr.setOrigin(new jsPoint(0,440));
+    gr.setCoordinateSystem("cartecian");
+	gr.setScale(1);
+    gr.showGrid(30);
+	var scale=10; // for x-Axis
+	var yscale=document.getElementById('yscale').value;   // for y-axis
+	var d = document.getElementById('canvas5');
+	d.style.position = "absolute";
+	d.style.left = "520px";
+	d.style.top = "1650px";
+    //Create jsColor object
+	
+    var redPen=new jsPen(new jsColor("red"),1);
+    var greenPen=new jsPen(new jsColor("green"),1);
+    var bluePen=new jsPen(new jsColor("blue"),1);
+    var grayPen=new jsPen(new jsColor("fuchsia"),1);
+console.log(batteryarray);
+var b =0;
+for (var j=anfang; j<=(anfang+2);j++){
+var i=0;
+	while(i<23){
+	var x1=(scale*b);
+	var y1=(realskyarray[j][i])/yscale;
+	var z1=batteryarray[j][i];
+	i++;
+	b++;
+	var x2=(scale*b);
+	var y2=realskyarray[j][i]/yscale;
+	var z2=batteryarray[j][i];
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+	var pt3 = new jsPoint(x1,z1);
+    var pt4 = new jsPoint(x2,z2);
+    gr.drawLine(redPen,pt1,pt2);
+	gr.drawLine(greenPen,pt3,pt4);
+	//console.log(x1, z1, z2, x2);
+	}
+}
+}
+
+function drawhorizont(sunalti, sunblock){
+    var gr=new jsGraphics(document.getElementById("canvas4"));
+    gr.setOrigin(new jsPoint(0,440));
+    gr.setCoordinateSystem("cartecian");
+	gr.setScale(4);
+    gr.showGrid(10);
+	var scale=10; // for x-Axis
+	var yscale=(1);   // for y-axis
+var d = document.getElementById('canvas4');
+d.style.position = "absolute";
+d.style.left = "10px";
+d.style.top = "1650px";
+    //Create jsColor object
+    var redPen=new jsPen(new jsColor("red"),1);
+    var greenPen=new jsPen(new jsColor("green"),1);
+    var bluePen=new jsPen(new jsColor("blue"),1);
+    var grayPen=new jsPen(new jsColor("fuchsia"),1);
+	var font=new jsFont("arial","bold","12px");
+var b =0;
+var y1=0;
+var y2=0;
+var i=0;
+	while(i<13){
+	x1=(scale*b);
+	y1=sunblock[i];
+	z1=Math.degrees(sunalti[81][(7+i)]);
+	i++;
+	b++;
+	x2=(scale*b);
+	y2=sunblock[i];
+	z2=Math.degrees(sunalti[81][(7+i)]);
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+	var pt3 = new jsPoint(x1,z1);
+    var pt4 = new jsPoint(x2,z2);
+    gr.drawLine(greenPen,pt1,pt2);
+	gr.drawLine(redPen,pt3,pt4);
+	//console.log(x1, y1, y2, x2);
+	gr.drawText("Märzfrische",new jsPoint(100,100),font,redPen.color,90);
+	gr.drawText("your horizon",new jsPoint(100,70),font,greenPen.color,90);
+	}
+	var b =0;
+	var i=0;
+	while(i<13){
+	x1=(scale*b);
+	z1=Math.degrees(sunalti[180][(7+i)])/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	z2=Math.degrees(sunalti[180][(7+i)])/yscale;
+	var pt3 = new jsPoint(x1,z1);
+    var pt4 = new jsPoint(x2,z2);
+	gr.drawLine(bluePen,pt3,pt4);
+	gr.drawText("sommerday",new jsPoint(100,90),font,bluePen.color,90);
+	}
+	var b =0;
+	var i=0;
+	while(i<13){
+	x1=(scale*b);
+	z1=Math.degrees(sunalti[360][(7+i)])/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	z2=Math.degrees(sunalti[360][(7+i)])/yscale;
+	var pt3 = new jsPoint(x1,z1);
+    var pt4 = new jsPoint(x2,z2);
+	gr.drawLine(grayPen,pt3,pt4);
+	gr.drawText("Winterzeit",new jsPoint(100,80),font,grayPen.color,90);
+	}
+}
+function showclearskyyearly() {
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var ratedpower = document.getElementById('ratedpower').value;
+clearsky = ClearskyValue(latitude, tilt, moduleazi);
+clearskyarray = clearsky[4];
+
+    var gr=new jsGraphics(document.getElementById("canvas3"));
+    gr.setOrigin(new jsPoint(0,440));
+    gr.setCoordinateSystem("cartecian");
+	gr.setScale(1);
+    gr.showGrid(30);
+	
+var d = document.getElementById('canvas3');
+d.style.position = "absolute";
+d.style.left = "770px";
+d.style.top = "1180px";
+    //Create jsColor object
+	
+    var redPen=new jsPen(new jsColor("red"),1);
+    var greenPen=new jsPen(new jsColor("green"),1);
+    var bluePen=new jsPen(new jsColor("blue"),1);
+    var grayPen=new jsPen(new jsColor("fuchsia"),1);
+	var font=new jsFont("arial","bold","12px");
+	
+var yscaleclearsky=document.getElementById('yscaleclearsky').value;
+
+var i=1;
+var b =0;
+var y1=0;
+var y2=0;
+	while(i<366){
+	x1=(b);
+	y1=clearskyarray[i]/yscaleclearsky;
+	i++;
+	b++;
+	x2=(b);
+	y2=clearskyarray[i]/yscaleclearsky;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+    //gr.drawLine(redPen,pt1,pt2);
+	var curvePoints = new Array(pt1,pt2);
+	gr.drawCurve(redPen, curvePoints);
+	//console.log(x1, y1, y2, x2);
+	}
+}
+
+
+function drawrealskyyearly(realskyarray2) {
+    var gr=new jsGraphics(document.getElementById("canvas2"));
+    gr.setOrigin(new jsPoint(0,440));
+    gr.setCoordinateSystem("cartecian");
+    gr.showGrid(50);
+	gr.setScale(1);
+	var yscalerealsky=document.getElementById('yscalerealsky').value;
+	
+var d = document.getElementById('canvas2');
+d.style.position = "absolute";
+d.style.left = "330px";
+d.style.top = "1180px";
+
+    //Create jsColor object
+	
+    var redPen=new jsPen(new jsColor("red"),1);
+    var greenPen=new jsPen(new jsColor("green"),1);
+    var bluePen=new jsPen(new jsColor("blue"),1);
+    var grayPen=new jsPen(new jsColor("fuchsia"),1);
+var i=1;
+var b =0;
+var y1=0;
+var y2=0;
+var z1=0;
+var z2=0;
+	//console.log(realskyarray5);
+	while(i<366){
+	x1=(b);
+	y1=realskyarray2[i]/yscalerealsky;
+	i++;
+	b++;
+	x2=(b);
+	y2=realskyarray2[i]/yscalerealsky;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+	//var pt3 = new jsPoint(x1,z1);
+	//var pt4 = new jsPoint(x2,z2);
+    gr.drawLine(greenPen,pt1,pt2);
+	var curvePoints = new Array(pt1,pt2);
+	//var curvePoints2 = new Array(pt3,pt4);
+	gr.drawCurve(greenPen, curvePoints);
+	//gr.drawCurve(bluePen, curvePoints2);
+	//console.log(x1, z1, z2, x2);
+	}
+}
+
+
+function drawrealsky(realskyarray) {
+var ratedpower = document.getElementById('ratedpower').value;
+//console.log(realskyarray);
+    var gr=new jsGraphics(document.getElementById("canvas1"));
+    gr.setOrigin(new jsPoint(0,440));
+    gr.setCoordinateSystem("cartecian");
+    gr.showGrid(10);
+	gr.setScale(1);
+	var scale=10; // for x-Axis
+	var yscale=document.getElementById('yscale').value;   // for y-axis
+	var d = document.getElementById('canvas1');
+d.style.position = "absolute";
+d.style.left = "0px";
+d.style.top = "1180px";
+	    var font=new jsFont("arial","bold","12px");
+
+    //Create jsColor object
+	
+    var redPen=new jsPen(new jsColor("red"),1);
+    var greenPen=new jsPen(new jsColor("green"),1);
+    var bluePen=new jsPen(new jsColor("blue"),1);
+    var grayPen=new jsPen(new jsColor("fuchsia"),1);
+var i=0;
+var b =0;
+	while(i<24){
+	x1=(scale*b);
+	y1=realskyarray[81][i]/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	y2=realskyarray[81][i]/yscale;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+    gr.drawLine(redPen,pt1,pt2);
+	//console.log(x1, y1, y2, x2);
+	}
+	gr.drawText("Märzfrische",new jsPoint(200,250),font,redPen.color,90);
+i=0;
+b=0;
+	while(i<24){
+	x1=(scale*b);
+	y1=realskyarray[180][i]/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	y2=realskyarray[180][i]/yscale;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+    gr.drawLine(bluePen,pt1,pt2);
+	//console.log(x1, y1, y2, x2);
+	}
+gr.drawText("Summerday",new jsPoint(200,220),font,bluePen.color,90);
+i=0;
+b=0;
+	while(i<24){
+	x1=(scale*b);
+	y1=realskyarray[261][i]/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	y2=realskyarray[261][i]/yscale;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+    gr.drawLine(greenPen,pt1,pt2);
+	//console.log(x1, y1, y2, x2);
+	}
+	gr.drawText("Herbstzeit",new jsPoint(200,190),font,greenPen.color,90);
+i=0;
+b=0;
+	while(i<24){
+	x1=(scale*b);
+	y1=realskyarray[360][i]/yscale;
+	i++;
+	b++;
+	x2=(scale*b);
+	y2=realskyarray[360][i]/yscale;
+    var pt1 = new jsPoint(x1,y1);
+    var pt2 = new jsPoint(x2,y2);
+    gr.drawLine(grayPen,pt1,pt2);
+	//console.log(x1, y1, y2, x2);
+	}
+	gr.drawText("Dezember",new jsPoint(200,170),font,grayPen.color,90);
+
+    //You can also code with inline object instantiation like below
+    //gr.drawLine(pen,new jsPoint(40,10),new jsPoint(70,150
+}
+</script>
+<script src="../js/SolarAutarki101.js"></script>
+<script type="text/JavaScript" src="../js/jsDraw2D.js"></script>
+
+</body>
