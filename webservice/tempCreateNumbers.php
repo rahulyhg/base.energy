@@ -2,10 +2,6 @@
 
 // we use DateTime to utilize DateTimeZone
 
-$dt = new DateTime("now", new DateTimeZone("Europe/Vienna"));
-$dt->setTimestamp(time());
-$dtFormatted = $dt->format("Y-m-d H:i:s");
-
 
 // Lets write health to our database
 try {
@@ -24,8 +20,9 @@ try {
 
     // use exec() because no results are returned
 	
-	$volt = $_GET["volt"];
-    $conn->exec("INSERT INTO healthlog (sendtime, volt) VALUES ('$dtFormatted', $volt)");
+	for ($i = 0; $i < 8760; $i++) {
+		$conn->exec("INSERT INTO numbers (n) VALUES ($i)");
+	}
 	$conn = null;
 }
 catch(PDOException $e) {

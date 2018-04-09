@@ -45,8 +45,8 @@ try {
 	// get variable $conn with access to mysql
 	include('dbaccess.php');
 	
-	// SELECT timestamp, volt, amps, relay, gsmsignal FROM history WHERE timestamp BETWEEN '2018-04-06 00:00:00' AND '2018-04-08 00:00:00';
-	$sth = $conn->prepare("SELECT timestamp, volt, amps, relay, gsmsignal FROM history WHERE timestamp BETWEEN '$from' AND '$to' ORDER BY timestamp;");
+	// SELECT sendtime, volt, amps, relay, gsmsignal FROM healthlog WHERE sendtime BETWEEN '2018-04-06 00:00:00' AND '2018-04-08 00:00:00' ORDER BY sendtime;
+	$sth = $conn->prepare("SELECT sendtime, volt, amps, relay, gsmsignal FROM healthlog WHERE sendtime BETWEEN '$from' AND '$to' ORDER BY sendtime;");
 	$sth->execute();
 	$result = $sth->fetchAll(PDO::FETCH_NUM);
 	
