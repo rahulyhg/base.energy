@@ -460,10 +460,13 @@ batterysize = crate(batterysize, verbraucher);
 var batterystatus= new Array(366);
 for (var i=0; i<366; i++){
 	batterystatus[i]= new Array(24);
+	for (var j=0; j<25; j++){
+		batterystatus[i][j]=0;
+	}
 }
 var solarautarkie=0;
 var peakcycle = [];
-var basecycle=[0];
+var basecycle= new Array(366);
 var increase;
 var cyclecounter=0;
 var cyclecounter2=0;
@@ -478,7 +481,6 @@ var realskydaily=realskyvalue[2]
 		if (output==NaN){
 			console.log("output NaN punkt statt komma bei dezimalstelle");
 		}
-			batterystatus[jahrestag][tagesstunde]=0;
 			switch(tagesstunde){
 			case 0:
 			if (jahrestag==anfang){
@@ -556,7 +558,6 @@ var realskydaily=realskyvalue[2]
 	resultscsv[1] = basecycle;
 	resultscsv[2] = solarautarkie;
 	resultscsv[3] = batterystatus;
-	console.log(resultscsv);
 return (resultscsv);
 }
 

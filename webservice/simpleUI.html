@@ -27,12 +27,13 @@ margin-left: 50px;
     display: block;
 }
 #autarkitable {
+	text-align: center;
     border-collapse: collapse;
     width: 100%;
-		font-family:    Tahoma;
+	font-family:    Tahoma;
 }
 
-autarkitable {
+#überschrift {
 	border: 1px solid #ddd;
 }
 #autarkitable td {
@@ -45,13 +46,12 @@ autarkitable {
 #autarkitable td:hover {background-color: #E7EFF7;}
 
 #autarkitable th {
-	    width: 200px;
+	width: 200px;
 	font-weight: 900;
 	font-size: 12px;
 	padding: 8px;
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
     background-color: #E6E6E6;
     color: #505050;
 	border: 1px solid #ddd;
@@ -74,8 +74,8 @@ ModuleAzi:
 <input id="moduleazi" value="210" type="text" name="moduleazi" size="5">
 <br>
 <br>
-  <input type="radio" name="gender" onClick="setyear()"> ganzes Jahr
-  <input type="radio" name="gender" onClick="setwowinter()"> ohne Winter
+  <input type="radio" onClick="setyear()"> ganzes Jahr
+  <input type="radio" onClick="setwowinter()"> ohne Winter
  <br>
  <br>
 <div id="html5Slider"></div><br>
@@ -247,9 +247,9 @@ html5Slider.noUiSlider.on('update', function( values, handle ) {
 	var value = values[handle];
 
 	if ( handle ) {
-		endday.value = value;
+		endday.value = value*1;
 	} else {
-		startingday.value = value;
+		startingday.value = value*1;
 	}
 });
 
@@ -458,8 +458,8 @@ function showbatterystatus(realskyaverage){
 var latitude = document.getElementById('latitude').value;
 var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
-var anfang = (document.getElementById('anfang').value);
-var ende = document.getElementById('ende').value;
+var anfang = (document.getElementById('anfang').value*1);
+var ende = (document.getElementById('ende').value*1);
 var verbraucher = document.getElementById('verbraucher').value;
 var ratedpower = document.getElementById('ratedpower').value;
 var whpercycle = document.getElementById('whpercycle').value;
@@ -481,7 +481,6 @@ var realsky = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower
 var realskyarray = realsky[0];
 var battery = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
 var batteryarray = battery[3];
-console.log(batteryarray);
 drawbatterystatus(batteryarray, realskyarray);
 }
 
@@ -542,7 +541,7 @@ var latitude = document.getElementById('latitude').value;
 var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
 var anfang = (document.getElementById('anfang').value*1);
-var ende = document.getElementById('ende').value;
+var ende = (document.getElementById('ende').value*1);
 var verbraucher = document.getElementById('verbraucher').value;
 var whpercycle = document.getElementById('whpercycle').value;
 
@@ -566,10 +565,15 @@ var peakcycle = getpeakcycle(whpercycle, latitude, realskyaverage, tilt, modulea
 //console.log("peakcycle "+peakcycle);
 var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
 var solarautarkie = cyclecounter[2];
-//console.log("solarautarkie = "+(solarautarkie*100)+"%");
-//textbox.textContent = ("zombieapocalypsemode " +zombieapo+ " chargetime is " + chargetime+ " peakcycle "+peakcycle+ " solarautarkie = "+(solarautarkie*100)+"%");         // Sets the text content
-//document.body.appendChild(textbox);
-document.getElementById(target).innerHTML = "zombieapocalypsemode " + zombieapo + "<br> chargetime needed (h) " + chargetime+ "<br>solarautarkie = "+Math.round(solarautarkie*100)+"%";
+
+if(solarautarkie > 0.85){
+	var solarautarkieline = "<br> <span style='color:green;font-weight:bold'>solarautarkie = "+Math.round(solarautarkie*100)+"%</span>";
+		}else if(solarautarkie<0.85 && solarautarkie>0.60){
+			 solarautarkieline = "<br> <span style='color:orange;font-weight:bold'>solarautarkie = "+Math.round(solarautarkie*100)+"%</span>";
+				}else{
+					solarautarkieline = "<br> <span style='color:red;font-weight:bold'>solarautarkie = "+Math.round(solarautarkie*100)+"%</span>";
+				}
+document.getElementById(target).innerHTML = "zombieapocalypsemode " + zombieapo + "<br> chargetime needed (h) " + chargetime + solarautarkieline;
 }
 
 function drawbatterystatus(batteryarray, realskyarray){
@@ -591,7 +595,6 @@ function drawbatterystatus(batteryarray, realskyarray){
     var greenPen=new jsPen(new jsColor("green"),1);
     var bluePen=new jsPen(new jsColor("blue"),1);
     var grayPen=new jsPen(new jsColor("fuchsia"),1);
-console.log(batteryarray);
 var b =0;
 for (var j=anfang; j<=(anfang+2);j++){
 var i=0;
