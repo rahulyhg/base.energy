@@ -64,7 +64,7 @@ GPRS gprs;
 GSM gsmAccess(false); // true is debug
 
 // URL, path & port (for example: arduino.cc)
-char server[] = "base.energy";
+char server[] = "dev.base.energy";
 char path[] = "/webservice/receiveHealth.php?volt=";
 int port = 80; // port 80 is the default for HTTP
 
@@ -149,7 +149,11 @@ void loop() {
     Serial.println("connection failed");
   }     
 
-
+  // read server response
+  while (client.available()) {
+    char c = client.read();
+    Serial.print(c);
+  }
 
   // if the server's disconnected, stop the client:
   if (!client.available() && !client.connected()) {
