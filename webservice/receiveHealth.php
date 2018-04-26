@@ -11,12 +11,8 @@ $dtFormatted = $dt->format("Y-m-d H:i:s");
 try {
 	// how to handle passwords for public repositories in GitHub
 	// See https://www.reddit.com/r/learnprogramming/comments/3wkf4w/php_how_do_i_use_github_without_revealing_mysql/
-	include("dbaccess.php");
-	$host = DBHOST;
-	$user = DBUSER; // Never put real user names in here (public repository)
-	$password = DBPASSWORD; // Never put real passwords in here (public repository)
-	$database = DB;	
-	
+	include("dbaccess.php"); // access to $host, $database, $user, $password
+
     $conn = new PDO("mysql:host=$host;dbname=$database", $user, $password);
 	
     // set the PDO error mode to exception
