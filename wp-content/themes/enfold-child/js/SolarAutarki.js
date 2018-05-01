@@ -186,8 +186,8 @@ return solmateday;
 var solmatehour = now.getHours();
 
 function ClearskyValue(latitude, tilt, moduleazi){
-	moduleazirad = mathtoradians(moduleazi);
-	tilt = mathtoradians(tilt);
+	var moduleazirad = mathtoradians(moduleazi);
+	var tiltrad = mathtoradians(tilt);
 	// declare objects properly and clean in the right scope
 	var resultscsv = new Array (7);
 	var cosdetahourly= new Array(366);
@@ -320,8 +320,9 @@ function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sun
           sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
 	//console.log(realskyaverage);
-	moduleazirad = mathtoradians(moduleazi);
-	tiltrad = mathtoradians(tilt);
+	var moduleazirad = mathtoradians(moduleazi);
+	var tiltrad = mathtoradians(tilt);
+	var outerazi = (moduleazirad - (Math.PI/2));
 	//console.log(latitude + " =latitude " + moduleazi + " =moduleazi " +tilt+ " =tilt");
 	// declare objects properly and clean in the right scope
 	var resultscsv = new Array (4);
@@ -411,17 +412,7 @@ function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sun
 			
 		}
 		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
-		var j;
-		if(moduleazi<=90){
-		if(houranglenow>=(moduleazirad+(3*Math.PI/2))){
-			j=0;
-		}
-		}else{
-			if(houranglenow>=(moduleazirad-(Math.PI/2))){
-			j=0;
-		}
-		}
-		if(cosdeta>=0 && mathtoradians(sunblock[j])<=sunaltitude){
+		if(cosdeta>=0 && mathtoradians(sunblock[tagesstunde])<=sunaltitude){
 				if(sunrise<=houranglenow && houranglenow<=sunset){
 					realskyhourly[jahrestag][tagesstunde]=Math.round10((cosdeta*irradiancenow*skyfactor*effizienzreel*ratedpower/1000), -4);
 					realsumme +=(cosdeta*irradiancenow*ratedpower*effizienzreel*skyfactor/1000);
@@ -429,9 +420,6 @@ function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sun
 					realskymonthly[month] += Math.round10((cosdeta*irradiancenow*effizienzreel*ratedpower*skyfactor/1000), -4);
 				//console.log("Die realStrahlung am "+jahrestag+"."+month+" um "+tagesstunde+" beträgt "+realskyhourly[jahrestag][tagesstunde]+" tilt = "+tilt+" und cosdeta "+ cosdeta+ " sunaltitude "+sunaltitude+" azitemp "+azitemp+" sunazimutnow" +sunazimutnow);
 				//console.log(" um "+tagesstunde+" realskyhourly " +realskyhourly[jahrestag][tagesstunde]+ " durch skyfac "+ skyfactor+ " sollte csv sein "+clearskyhourly[jahrestag][tagesstunde]+ " aber ist "+(realskyhourly[jahrestag][tagesstunde]/(skyfactor*effizienzreel)));
-				}
-				if (j<=12){
-				j++;
 				}
 			}
 		}

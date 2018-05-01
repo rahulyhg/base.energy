@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <title>Solar Report</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script src="../wp-content/themes/enfold-child/js/nouislider.min.js"></script>
 	<script src="../wp-content/themes/enfold-child/js/SolarAutarki.js"></script>
-	<script type="text/JavaScript" src="../wp-content/themes/enfold-child/js/jsDraw2D.js"></script>
+	<!-- <script type="text/JavaScript" src="../wp-content/themes/enfold-child/js/jsDraw2D.js"></script> -->
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<link href="../wp-content/themes/enfold-child/css/nouislider.min.css" rel="stylesheet">
+	<!-- Charts JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <style>
 .behaelter {
-margin-left: 50px;
+margin-left: 0px;
 }
 .schieber{
-	margin: 8px;
+	margin: 16px;
 	display: inline-block;
 	height: 150px;
 }
@@ -19,6 +24,7 @@ margin-left: 50px;
 	margin: 8px;
 	display: inline-block;
 	height: 150px;
+	width: 10px;
 }
 .noUi-tooltip {
     display: none;
@@ -58,171 +64,214 @@ margin-left: 50px;
 }
 </style>
 </head>
-<body>
-<form action="#">
-anfang:
-<input id="anfang" type="text" name="anfang">
-Ende:
-<input id="ende" type="text" name="ende" size="5"> 
-Lat:
-<input id="latitude" value="48.19" type="text" name="latitude" size="5">
-longitude:
-<input id="longitude" value="16" type="text" name="longitude" size="5">
-Tilt:
-<input id="tilt" value="90" type="text" name="tilt" size="5">
-ModuleAzi:
-<input id="moduleazi" value="210" type="text" name="moduleazi" size="5">
-<br>
-<br>
-  <input type="radio" onClick="setyear()"> ganzes Jahr
-  <input type="radio" onClick="setwowinter()"> ohne Winter
- <br>
- <br>
-<div id="html5Slider"></div><br>
+<body onload="refreshhorizon()">
+<div class="container">
+	<div class="card">
+		<h4 class="card-header">Solar Reporter</h4>
+	<form action="#" >
+	anfang:
+	<input id="anfang" type="text" name="anfang">
+	Ende:
+	<input id="ende" type="text" name="ende" size="5"> 
+	Lat:
+	<input id="latitude" value="48.19" type="text" name="latitude" size="5">
+	longitude:
+	<input id="longitude" value="16" type="text" name="longitude" size="5">
+	  <input type="radio" onClick="setyear()"> ganzes Jahr
+	  <input type="radio" onClick="setwowinter()"> ohne Winter
+	 <br>
+	 <br>
+	<div id="html5Slider"></div><br>
 
 
-Verbraucher in Watt:
-<input id="verbraucher" value="150" type="number" name="verbraucher" size="5">
+	Verbraucher in Watt:
+	<input id="verbraucher" value="150" type="number" name="verbraucher" size="5">
 
-Wattstunden per Cycle:
-<input id="whpercycle" value="100" type="number" name="whpercycle" size="5"><br></br>
- 
-<select id="profilauswahl" onload="refreshprofil()" onchange="refreshprofil()">
-  <option value="0">Erstelle app-profil</option>
-  <option value="0">light</option>
-  <option value="1">smartphone</option>
-  <option value="2">E-bike</option>
-  <option value="3">workmusic</option>
-  <option value="4">nightmusic</option>
-  <option value="5">fridge</option>
-  <option value="6">wasserpumpe</option>
-  <option value="7">multimediaecke</option>
-  <option value="8">coffee</option>
-  <option value="9">säge</option>
-  <option value="10">küchenmaschine</option>
-  <option value="11">ventilator</option>
-</select><br><br>
-<div class="behaelter">
-1<div class="sliders" id="0"></div>
-2<div class="sliders" id="1"></div>
-3<div class="sliders" id="2"></div>
-4<div class="sliders" id="3"></div>
-5<div class="sliders" id="4"></div>
-6<div class="sliders" id="5"></div>
-7<div class="sliders" id="6"></div>
-8<div class="sliders" id="7"></div>
-9<div class="sliders" id="8"></div>
-10<div class="sliders" id="9"></div>
-11<div class="sliders" id="10"></div>
-12<div class="sliders" id="11"></div>
-13<div class="sliders" id="12"></div>
-14<div class="sliders" id="13"></div>
-15<div class="sliders" id="14"></div>
-16<div class="sliders" id="15"></div>
-17<div class="sliders" id="16"></div>
-18<div class="sliders" id="17"></div>
-19<div class="sliders" id="18"></div>
-20<div class="sliders" id="19"></div>
-21<div class="sliders" id="20"></div>
-22<div class="sliders" id="21"></div>
-23<div class="sliders" id="22"></div>
-24<div class="sliders" id="23"></div>
-</div><br>
-<br>
-Erstelle horizontal file
-<select id="horizontauswahl" onload="refreshhorizon()" onchange="refreshhorizon()">
-  <option value="0">Ebene</option>
-  <option value="1">Aspangstrasse</option>
-  </select><br><br>
-<div class="behaelter">
-0<div title="0" class="schieber" id="24"></div>
-15<div class="schieber" id="25"></div>
-30<div class="schieber" id="26"></div>
-45<div class="schieber" id="27"></div>
-60<div class="schieber" id="28"></div>
-75<div class="schieber" id="29"></div>
-90<div class="schieber" id="30"></div>
-105<div class="schieber" id="31"></div>
-120<div class="schieber" id="32"></div>
-135<div class="schieber" id="33"></div>
-150<div class="schieber" id="34"></div>
-165<div class="schieber" id="35"></div>
-180<div class="schieber" id="36"></div>
-</div><br>
-</form> 
-<input type="submit" value="start" onClick="anfangarsch()"><br>
-<br>
-<table id="autarkitable">
-  <tr>
-    <th id="überschrift">solare Autarkie</th>
-    <th>PV 100W</th>
-	<th>PV 150W</th>
-	<th>PV 200W</th>
-	<th>PV 250W</th>
-	<th>PV 300W</th>
-	<th>PV 500W</th>
-  </tr>
-  <tr>
-    <th>Capacity 18Ah = 216 Wh</th>
-    <td id="18100w">tbc</td>
-    <td id="18150w">tbc</td>
-    <td id="18200w">tbc tbc</td>
-    <td id="18250w">tbc tbc</td>
-    <td id="18300w">tbc tbc</td>
-    <td id="18500w">tbc tbc</td>
-  </tr>
-  <tr>
-    <th>Capacity 38Ah = 456 Wh</th>
-    <td id="38100w">tbc</td>
-    <td id="38150w">tbc</td>
-    <td id="38200w">tbc tbc</td>
-    <td id="38250w">tbc tbc</td>
-    <td id="38300w">tbc tbc</td>
-    <td id="38500w">tbc tbc</td>
-  </tr>
-  <tr>
-    <th>Capacity 60Ah = 720 Wh</th>
-    <td id="60100w">tbc</td>
-    <td id="60150w">tbc</td>
-    <td id="60200w">tbc tbc</td>
-    <td id="60250w">tbc tbc</td>
-    <td id="60300w">tbc tbc</td>
-    <td id="60500w">tbc tbc</td>
-  </tr>
-    <tr>
-    <th>Capacity 120Ah = 1440 Wh</th>
-    <td id="120100w">tbc</td>
-    <td id="120150w">tbc</td>
-    <td id="120200w">tbc tbc</td>
-    <td id="120250w">tbc tbc</td>
-    <td id="120300w">tbc tbc</td>
-    <td id="120500w">tbc tbc</td>
-  </tr>
-</table><br>
-<br>
-batterysize:
-<input id="batterysize" value="216" type="number" name="batterysize" size="5">
-
-ratedpower in Wattpeak:
-<input id="ratedpower" value="150" type="number" name="ratedpower" size="5"> <br>
-yscale-daily:
-<input id="yscale" value="0.2" type="number" name="yscale" size="5">
-yscale-yearly:
-<input id="yscalerealsky" value="2" type="number" name="yscalerealsky" size="5">
-yscale clearsky
-<input id="yscaleclearsky" value="30" type="number" name="yscalerealsky" size="5">
-<div id="canvas1" style="width:300px;height:440px;"></div>
-<div id="canvas2" style="width:400px;height:440px;"></div>
-<div id="canvas3" style="width:400px;height:440px;"></div>
-<div id="canvas4" style="width:500px;height:440px;"></div>
-<div id="canvas5" style="width:600px;height:440px;"></div>
-<div id="textbox" style="width:1000px;height:440px;"></div>
-<!--script src="../js/realskyaverage_GHI.js"></script-->
-
+	Wattstunden per Cycle:
+	<input id="whpercycle" value="100" type="number" name="whpercycle" size="5"><br></br>
+	 
+	<select id="profilauswahl" onload="refreshprofil()" onchange="refreshprofil()">
+	  <option value="0">Erstelle app-profil</option>
+	  <option value="0">light</option>
+	  <option value="1">smartphone</option>
+	  <option value="2">E-bike</option>
+	  <option value="3">workmusic</option>
+	  <option value="4">nightmusic</option>
+	  <option value="5">fridge</option>
+	  <option value="6">wasserpumpe</option>
+	  <option value="7">multimediaecke</option>
+	  <option value="8">coffee</option>
+	  <option value="9">säge</option>
+	  <option value="10">küchenmaschine</option>
+	  <option value="11">ventilator</option>
+	</select><br><br>
+	<div class="behaelter">
+	1<div class="sliders" id="0"></div>
+	2<div class="sliders" id="1"></div>
+	3<div class="sliders" id="2"></div>
+	4<div class="sliders" id="3"></div>
+	5<div class="sliders" id="4"></div>
+	6<div class="sliders" id="5"></div>
+	7<div class="sliders" id="6"></div>
+	8<div class="sliders" id="7"></div>
+	9<div class="sliders" id="8"></div>
+	10<div class="sliders" id="9"></div>
+	11<div class="sliders" id="10"></div>
+	12<div class="sliders" id="11"></div>
+	13<div class="sliders" id="12"></div>
+	14<div class="sliders" id="13"></div>
+	15<div class="sliders" id="14"></div>
+	16<div class="sliders" id="15"></div>
+	17<div class="sliders" id="16"></div>
+	18<div class="sliders" id="17"></div>
+	19<div class="sliders" id="18"></div>
+	20<div class="sliders" id="19"></div>
+	21<div class="sliders" id="20"></div>
+	22<div class="sliders" id="21"></div>
+	23<div class="sliders" id="22"></div>
+	24<div class="sliders" id="23"></div>
+	</div><br>
+	<br>
+	Erstelle horizontal file
+	<select id="horizontauswahl" onload="refreshhorizon()" onchange="refreshhorizon()">
+	  <option value="0">Ebene</option>
+	  <option value="1">Aspangstrasse</option>
+	  </select><br><br>
+	<div class="behaelter">
+	<b id='25'>0 </b><div class="schieber" id="100"></div>
+	<b id='26'>0 </b><div class="schieber" id="101"></div>
+	<b id='27'>0 </b><div class="schieber" id="102"></div>
+	<b id='28'>0 </b><div class="schieber" id="103"></div>
+	<b id='29'>0 </b><div class="schieber" id="104"></div>
+	<b id='30'>0 </b><div class="schieber" id="105"></div>
+	<b id='31'>0 </b><div class="schieber" id="106"></div>
+	<b id='32'>0 </b><div class="schieber" id="107"></div>
+	<b id='33'>0 </b><div class="schieber" id="108"></div>
+	<b id='34'>0 </b><div class="schieber" id="109"></div>
+	<b id='35'>0 </b><div class="schieber" id="110"></div>
+	<b id='36'>0 </b><div class="schieber" id="111"></div>
+	<b id='37'>0 </b><div class="schieber" id="112"></div>
+	</div><br>
+	</form>	
+	<br>
+	<table id="autarkitable">
+	  <tr>
+		<th id="überschrift">solare Autarkie</th>
+		<th>PV 100W</th>
+		<th>PV 150W</th>
+		<th>PV 200W</th>
+		<th>PV 250W</th>
+		<th>PV 300W</th>
+		<th>PV 500W</th>
+	  </tr>
+	  <tr>
+		<th>Capacity 18Ah = 216 Wh</th>
+		<td id="18100w">tbc</td>
+		<td id="18150w">tbc</td>
+		<td id="18200w">tbc tbc</td>
+		<td id="18250w">tbc tbc</td>
+		<td id="18300w">tbc tbc</td>
+		<td id="18500w">tbc tbc</td>
+	  </tr>
+	  <tr>
+		<th>Capacity 38Ah = 456 Wh</th>
+		<td id="38100w">tbc</td>
+		<td id="38150w">tbc</td>
+		<td id="38200w">tbc tbc</td>
+		<td id="38250w">tbc tbc</td>
+		<td id="38300w">tbc tbc</td>
+		<td id="38500w">tbc tbc</td>
+	  </tr>
+	  <tr>
+		<th>Capacity 60Ah = 720 Wh</th>
+		<td id="60100w">tbc</td>
+		<td id="60150w">tbc</td>
+		<td id="60200w">tbc tbc</td>
+		<td id="60250w">tbc tbc</td>
+		<td id="60300w">tbc tbc</td>
+		<td id="60500w">tbc tbc</td>
+	  </tr>
+		<tr>
+		<th>Capacity 120Ah = 1440 Wh</th>
+		<td id="120100w">tbc</td>
+		<td id="120150w">tbc</td>
+		<td id="120200w">tbc tbc</td>
+		<td id="120250w">tbc tbc</td>
+		<td id="120300w">tbc tbc</td>
+		<td id="120500w">tbc tbc</td>
+	  </tr>
+	</table>
+	batterysize:
+	<input id="batterysize" value="216" type="number" name="batterysize" size="5">
+	ratedpower in Wattpeak:
+	<input id="ratedpower" value="150" type="number" name="ratedpower" size="5">
+	Tilt:
+	<input id="tilt" value="90" type="number" min="0" max="90" step="5" size="5" onload="refresh()" onchange="refresh()">
+	ModuleAzi:
+	<select id="moduleazi" onload="refreshhorizon()" onchange="refreshhorizon()" >
+	<option value="0">Norden</option>
+	  <option value="15">15</option>
+	  <option value="30">30</option>
+	  <option value="45">Nord-Ost</option>
+	  <option value="60">60</option>
+	  <option value="75">75</option>
+	  <option value="90">Osten</option>
+	  <option value="105">105</option>
+	  <option value="120">120</option>
+	  <option value="135">Süd-Ost</option>
+	  <option value="150">150</option>
+	  <option value="165">165</option>
+	  <option value="180">Süden</option>
+	  <option value="195">195</option>
+	  <option value="210" selected="selected">210</option>
+	  <option value="225">Süd-West</option>
+	  <option value="240">240</option>
+	  <option value="255">255</option>
+	  <option value="270">West</option>
+	  <option value="285">285</option>
+	  <option value="300">300</option>
+	  <option value="315">Nord-West</option>
+	  <option value="330">330</option>
+	  <option value="345">345</option>
+	</select>	<br>
+	<input type="submit" class='button' value="start" onClick="anfangarsch()">
+	<input type="submit" class='button' value="refresh charts" onClick="refresh()">
+		<canvas id="batterystatuschart" style="width:800px;height:600px;"></canvas>
+		<canvas id="yearlysolar" style="width:800px;height:440px;"></canvas>
+		<canvas id="horizon" style="width:800px;height:440px;"></canvas>
+	</div>
+</div>
 <script>
 var startingday = document.getElementById('anfang');
 var endday = document.getElementById('ende');
+var myChart1;
+var myChart2;
+var myChart3;
+function refresh(){
+var latitude = document.getElementById('latitude').value;
+var longitude = document.getElementById('longitude').value;
+refresher(latitude,longitude);
+}
 
+function refresher(lat, lng)
+{
+    var request = {
+				lat: lat,
+				lng: lng
+	};
+    var json = JSON.stringify(request);
+    $.ajax({
+      type: "POST",
+      dataType: "JSON",
+      url: "https://base.energy/webservice/getGhi.php", //Relative or absolute path to response.php file
+      data: json,
+      success: function(realskyaverage) {
+
+		showbatterystatus(realskyaverage);
+		showsolaryearly(realskyaverage);
+		showhorizont(realskyaverage);
+}})
+}
 function setyear(){
 html5Slider.noUiSlider.set([1, 365]);
 }
@@ -324,18 +373,104 @@ for (var i=0; i<24; i++){
 var verbraucher = document.getElementById('verbraucher');
 verbraucher.value = app[profilauswahl][24];
 };
-
+function horizonbeschriftung(){
+var moduleazi = (document.getElementById('moduleazi').value*1);
+var j = 0;
+var beschriftung = 0;
+if (moduleazi >=90 && moduleazi <=359){
+j = (0-90);
+}else{
+		j = 270;
+			}
+for (var i=25; i<38; i++){
+if ((moduleazi+j)<360){
+	beschriftung = (moduleazi+j);
+	document.getElementById(i).innerHTML = " "+beschriftung;
+	j=j+15;
+	}else{
+	beschriftung = (moduleazi+j-360);
+	document.getElementById(i).innerHTML = " "+beschriftung;
+	j=j+15;
+	}
+	}
+}
 function refreshhorizon(){
+	horizonbeschriftung();
 	var j = 0;
-for (var x=24; x<37; x++){
+for (var x=100; x<113; x++){
 	var regulator = document.getElementById(x);
 	horizontauswahl=document.getElementById('horizontauswahl').value;
 	horizontersteller=horizon[horizontauswahl][j];
 	regulator.noUiSlider.set(horizontersteller);
 	j++
 }
-};
-
+refresh();
+}
+function getsunblock(){
+var moduleazi = (document.getElementById('moduleazi').value*1);
+var sunblock = new Array(24);
+var counter = (100);
+var counter3 = (100);
+var counter2 = (112);
+for (var i=0; i<24; i++)
+{
+	if(moduleazi>=90 && moduleazi<270)
+		{
+		if(i<=((moduleazi/15)+6) && i>=((moduleazi/15)-6))
+			{
+			derwert = document.getElementById(counter);
+			sunblock[i]= (derwert.noUiSlider.get()*1);
+			if(counter<112){counter++;}
+			}else{sunblock[i]= 0;}
+		}else
+			{
+			if(moduleazi>=270){
+							if(i<=((moduleazi/15)-18))
+													{
+													derwert = document.getElementById(counter2+(18-(moduleazi/15)));
+													sunblock[i]= (derwert.noUiSlider.get()*1);
+													counter2++;
+													}else
+													{
+													if ( i >= ((moduleazi/15)-6)){
+																					derwert = document.getElementById(counter);
+																					sunblock[i]= (derwert.noUiSlider.get()*1);
+																					counter++;
+																				}else{sunblock[i]= 0;}
+													}
+							}else{
+									if(i<=((moduleazi/15)+6)){
+									derwert = document.getElementById(counter+(6-(moduleazi/15)));
+									sunblock[i]= (derwert.noUiSlider.get()*1);
+									counter++;
+														}else{
+																if(i>=(18+(moduleazi/15))){
+																						derwert = document.getElementById(counter3);
+																						sunblock[i]= (derwert.noUiSlider.get()*1);
+																						counter3++;
+																						}else{sunblock[i]=0;}
+													}
+							}
+			}
+}
+return sunblock;
+}
+function gethorizonarrays(moduleazi, array){
+var k = 0;
+if (moduleazi >=90 && moduleazi <=269){
+	k = ((moduleazi/15)-6);
+	}else{
+		if (moduleazi>269){
+		k = ((moduleazi/15)-6);
+			}else{k=(18+(moduleazi/15));}
+		}
+	var horizonarray = new Array (12);
+for (j=0; j<13;j++){
+	if ((k+j)>23){k=((-1)*j)}
+	horizonarray[j]=(array[k+j]);
+}
+return horizonarray;
+}
 var schieber = document.getElementsByClassName('schieber');
 
 [].slice.call(schieber).forEach(function( slider, index ){
@@ -378,11 +513,9 @@ function getGhi(lat, lng)
       data: json,
       success: function(realskyaverage) {
 
-		showrealsky(realskyaverage);
-		showrealskyyearly(realskyaverage);
-		showclearskyyearly(realskyaverage);
-		showhorizont(realskyaverage);
 		showbatterystatus(realskyaverage);
+		showsolaryearly(realskyaverage);
+		showhorizont(realskyaverage);
 		showtherest(realskyaverage, 216, 100, "18100w");
 		showtherest(realskyaverage, 216, 150, "18150w");
 		showtherest(realskyaverage, 216, 200, "18200w");
@@ -470,12 +603,8 @@ for (var i=0; i<24; i++){
 	var wert = document.getElementById(i);
 	appprofil[i]=wert.noUiSlider.get();
 }
-var sunblock = new Array(13);
-for (var i=0; i<13; i++){
-	var counter = (i+24);
-	derwert = document.getElementById(counter);
-	sunblock[i]= derwert.noUiSlider.get();
-}
+var sunblock = getsunblock();
+//console.log(sunblock);
 
 var realsky = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
 var realskyarray = realsky[0];
@@ -484,39 +613,19 @@ var batteryarray = battery[3];
 drawbatterystatus(batteryarray, realskyarray);
 }
 
-function showrealsky(realskyaverage) {
-var latitude = document.getElementById('latitude').value;
-var tilt = document.getElementById('tilt').value;
-var moduleazi = document.getElementById('moduleazi').value;
-var ratedpower = document.getElementById('ratedpower').value;
-var sunblock = new Array(13);
-for (var i=0; i<13; i++){
-	var counter = (i+24);
-	derwert = document.getElementById(counter);
-	sunblock[i]= derwert.noUiSlider.get();
-}
-
-var realskyarray = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
-var realsky = realskyarray[0];
-drawrealsky(realsky);
-}
-
-function showrealskyyearly(realskyaverage) {
+function showsolaryearly(realskyaverage) {
 var latitude = document.getElementById('latitude').value;
 var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
 var ratedpower = document.getElementById('ratedpower').value;
 
-var sunblock = new Array(13);
-for (var i=0; i<13; i++){
-	var counter = (i+24);
-	derwert = document.getElementById(counter);
-	sunblock[i]= derwert.noUiSlider.get();
-}
-var realskyarray = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+var sunblock = getsunblock();
+var realskyarray = RealskyValue(latitude, realskyaverage, tilt, moduleazi, 1000, sunblock); //1000 Wp bedeutet eine Fläche von 1m² bei STC
 var realsky = realskyarray[2];
+var clearskyarray = ClearskyValue(latitude, tilt, moduleazi);
+var clearsky = clearskyarray[4];
 //console.log(realsky);
-drawrealskyyearly(realsky);
+drawrealskyyearly(realsky, clearsky);
 }
 
 function showhorizont(realskyaverage) {
@@ -524,12 +633,7 @@ var latitude = document.getElementById('latitude').value;
 var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
 var ratedpower = document.getElementById('ratedpower').value;
-var sunblock = new Array(13);
-for (var i=0; i<13; i++){
-	var counter = (i+24);
-	derwert = document.getElementById(counter);
-	sunblock[i]= derwert.noUiSlider.get();
-}
+var sunblock = getsunblock();
 
 var clearskyvalue = ClearskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
 var sunalti = clearskyvalue[2];
@@ -551,12 +655,7 @@ for (var i=0; i<24; i++){
 	appprofil[i]=wert.noUiSlider.get();
 }
 
-var sunblock = new Array(13);
-for (var i=0; i<13; i++){
-	var counter = (i+24);
-	derwert = document.getElementById(counter);
-	sunblock[i]= derwert.noUiSlider.get();
-}
+var sunblock = getsunblock();
 var zombieapo=getzombiemode(batterysize, verbraucher, appprofil);
 //console.log("zombieapocalypsemode " +zombieapo);
 var chargetime=getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, sunblock);
@@ -578,297 +677,300 @@ document.getElementById(target).innerHTML = "zombieapocalypsemode " + zombieapo 
 
 function drawbatterystatus(batteryarray, realskyarray){
 	var anfang = (document.getElementById('anfang').value*1);
-    var gr=new jsGraphics(document.getElementById("canvas5"));
-    gr.setOrigin(new jsPoint(0,440));
-    gr.setCoordinateSystem("cartecian");
-	gr.setScale(1);
-    gr.showGrid(30);
-	var scale=10; // for x-Axis
-	var yscale=document.getElementById('yscale').value;   // for y-axis
-	var d = document.getElementById('canvas5');
-	d.style.position = "absolute";
-	d.style.left = "520px";
-	d.style.top = "1650px";
-    //Create jsColor object
-	
-    var redPen=new jsPen(new jsColor("red"),1);
-    var greenPen=new jsPen(new jsColor("green"),1);
-    var bluePen=new jsPen(new jsColor("blue"),1);
-    var grayPen=new jsPen(new jsColor("fuchsia"),1);
-var b =0;
-for (var j=anfang; j<=(anfang+2);j++){
-var i=0;
-	while(i<23){
-	var x1=(scale*b);
-	var y1=(realskyarray[j][i])/yscale;
-	var z1=batteryarray[j][i];
-	i++;
-	b++;
-	var x2=(scale*b);
-	var y2=realskyarray[j][i]/yscale;
-	var z2=batteryarray[j][i];
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-	var pt3 = new jsPoint(x1,z1);
-    var pt4 = new jsPoint(x2,z2);
-    gr.drawLine(redPen,pt1,pt2);
-	gr.drawLine(greenPen,pt3,pt4);
-	//console.log(x1, z1, z2, x2);
+	var batterysize = (document.getElementById('batterysize').value*1);
+	var pvleistung = (document.getElementById('ratedpower').value*1);
+	var realsky3tage = new Array;
+	for (var j=anfang; j<=(anfang+2);j++){
+	var i=0;
+		while(i<23){
+		realsky3tage.push(realskyarray[j][i]);
+		i++
+		}
 	}
-}
-}
+	var batteryarray3tage = new Array;
+	for (var j=anfang; j<=(anfang+2);j++){
+	var i=0;
+		while(i<23){
+		batteryarray3tage.push(((batteryarray[j][i]/batterysize)*100));
+		i++
+		}
+	}
+	//console.log(batteryarray3tage);
+	var xbeschriftung72stunden = new Array (72);
+	var i = 0;
+	for (var j=0; j<=(72);j++){
+	if (i==23){
+	i = 0
+	}
+	xbeschriftung72stunden[j]=i;
+	i++;
+	}
+	var Dataset = {
+				labels: xbeschriftung72stunden,
+				datasets: [{
+					label: 'Batterystatus',
+					yAxisID: 'A',
+					fill: false,
+					borderColor: "rgba(75,191,192,1)",
+					data: batteryarray3tage,
+					borderWidth: 1
+				},
+				{
+					label: 'PV',
+					yAxisID: 'B',
+					borderColor: "rgba(255, 0, 0, 1)",
+					data: realsky3tage,
+					borderWidth: 0.5
+				}]
+			}
+	var chartoptions =  {
+				responsive: false,
+				legend: {
+					display: true
+				},
+				scales: {
+				xAxes: 
+					[{
+						ticks: {
+							autoSkip: true,
+							maxTicksLimit: 36
+						}
+					}],
+					yAxes:  [{
+							id: 'A',
+							type: 'linear',
+							position: 'left',
+							ticks: {
+										min:0,
+										max:100,
+										stepSize: 10
+									},
+							gridLines: {
+								color: 'rgba(75,191,192,0.5)' // makes grid lines from y axis red
+										},
+							scaleLabel: {
+										display: true,
+										labelString: 'Batterystatus in %'
+									  }
+						  },
+						  {
+							id: 'B',
+							type: 'linear',
+							position: 'right',
+							ticks: {	
+										min:0,
+										stepSize: (Math.max(...realsky3tage)/10)
+									},
+							gridLines: {
+								color: 'rgba(255, 0, 0, 0.5)' // makes grid lines from y axis red
+										},
+										scaleLabel: {
+													display: true,
+													labelString: 'PV-Ertrag in Watt'
+												  }
+							}]
+				}
+			}
+	
+	var config={
+			type: 'line',
+			data: Dataset,
+			options: chartoptions
+		};
 
+	var ctx = document.getElementById("batterystatuschart").getContext('2d');
+	if(!myChart1){
+		myChart1 = new Chart(ctx, config);
+		}else{
+		myChart1.config.data = Dataset;
+		myChart1.options = chartoptions;
+		myChart1.update();
+		}
+}
 function drawhorizont(sunalti, sunblock){
-    var gr=new jsGraphics(document.getElementById("canvas4"));
-    gr.setOrigin(new jsPoint(0,440));
-    gr.setCoordinateSystem("cartecian");
-	gr.setScale(4);
-    gr.showGrid(10);
-	var scale=10; // for x-Axis
-	var yscale=(1);   // for y-axis
-var d = document.getElementById('canvas4');
-d.style.position = "absolute";
-d.style.left = "10px";
-d.style.top = "1650px";
-    //Create jsColor object
-    var redPen=new jsPen(new jsColor("red"),1);
-    var greenPen=new jsPen(new jsColor("green"),1);
-    var bluePen=new jsPen(new jsColor("blue"),1);
-    var grayPen=new jsPen(new jsColor("fuchsia"),1);
-	var font=new jsFont("arial","bold","12px");
-var b =0;
-var y1=0;
-var y2=0;
-var i=0;
-	while(i<13){
-	x1=(scale*b);
-	y1=sunblock[i];
-	z1=Math.degrees(sunalti[81][(7+i)]);
-	i++;
-	b++;
-	x2=(scale*b);
-	y2=sunblock[i];
-	z2=Math.degrees(sunalti[81][(7+i)]);
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-	var pt3 = new jsPoint(x1,z1);
-    var pt4 = new jsPoint(x2,z2);
-    gr.drawLine(greenPen,pt1,pt2);
-	gr.drawLine(redPen,pt3,pt4);
-	//console.log(x1, y1, y2, x2);
-	gr.drawText("Märzfrische",new jsPoint(100,100),font,redPen.color,90);
-	gr.drawText("your horizon",new jsPoint(100,70),font,greenPen.color,90);
-	}
-	var b =0;
-	var i=0;
-	while(i<13){
-	x1=(scale*b);
-	z1=Math.degrees(sunalti[180][(7+i)])/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	z2=Math.degrees(sunalti[180][(7+i)])/yscale;
-	var pt3 = new jsPoint(x1,z1);
-    var pt4 = new jsPoint(x2,z2);
-	gr.drawLine(bluePen,pt3,pt4);
-	gr.drawText("sommerday",new jsPoint(100,90),font,bluePen.color,90);
-	}
-	var b =0;
-	var i=0;
-	while(i<13){
-	x1=(scale*b);
-	z1=Math.degrees(sunalti[360][(7+i)])/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	z2=Math.degrees(sunalti[360][(7+i)])/yscale;
-	var pt3 = new jsPoint(x1,z1);
-    var pt4 = new jsPoint(x2,z2);
-	gr.drawLine(grayPen,pt3,pt4);
-	gr.drawText("Winterzeit",new jsPoint(100,80),font,grayPen.color,90);
+var moduleazi = (document.getElementById('moduleazi').value*1);
+for (j=0; j<24;j++){
+	sunalti[81][j] = Math.degrees(sunalti[81][j]);
+	sunalti[180][j] = Math.degrees(sunalti[180][j]);
+	sunalti[360][j] = Math.degrees(sunalti[360][j]);
+}
+var horizon = gethorizonarrays(moduleazi, sunblock);
+var märzfrische = gethorizonarrays(moduleazi, sunalti[81]);
+var sommerday = gethorizonarrays(moduleazi, sunalti[180]);
+var Winterzeit = gethorizonarrays(moduleazi, sunalti[360]);
+//console.log(horizon, märzfrische, sommerday, Winterzeit);
+
+var j = 0;
+if (moduleazi >=90 && moduleazi <=359){
+j = (0-90);
+}else{
+		j = 270;
+			}
+var xbeschriftunghorizon = new Array (13);
+for (var i=0; i<(13);i++){
+if ((moduleazi+j)<360){
+	xbeschriftunghorizon[i] = (moduleazi+j);
+	j=j+15;
+	}else{
+	xbeschriftunghorizon[i] = (moduleazi+j-360);
+	j=j+15;
 	}
 }
-function showclearskyyearly() {
-var latitude = document.getElementById('latitude').value;
-var tilt = document.getElementById('tilt').value;
-var moduleazi = document.getElementById('moduleazi').value;
-var ratedpower = document.getElementById('ratedpower').value;
-clearsky = ClearskyValue(latitude, tilt, moduleazi);
-clearskyarray = clearsky[4];
-
-    var gr=new jsGraphics(document.getElementById("canvas3"));
-    gr.setOrigin(new jsPoint(0,440));
-    gr.setCoordinateSystem("cartecian");
-	gr.setScale(1);
-    gr.showGrid(30);
-	
-var d = document.getElementById('canvas3');
-d.style.position = "absolute";
-d.style.left = "770px";
-d.style.top = "1180px";
-    //Create jsColor object
-	
-    var redPen=new jsPen(new jsColor("red"),1);
-    var greenPen=new jsPen(new jsColor("green"),1);
-    var bluePen=new jsPen(new jsColor("blue"),1);
-    var grayPen=new jsPen(new jsColor("fuchsia"),1);
-	var font=new jsFont("arial","bold","12px");
-	
-var yscaleclearsky=document.getElementById('yscaleclearsky').value;
-
-var i=1;
-var b =0;
-var y1=0;
-var y2=0;
-	while(i<366){
-	x1=(b);
-	y1=clearskyarray[i]/yscaleclearsky;
-	i++;
-	b++;
-	x2=(b);
-	y2=clearskyarray[i]/yscaleclearsky;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-    //gr.drawLine(redPen,pt1,pt2);
-	var curvePoints = new Array(pt1,pt2);
-	gr.drawCurve(redPen, curvePoints);
-	//console.log(x1, y1, y2, x2);
-	}
+var Dataset= {
+			labels: xbeschriftunghorizon,
+			datasets: [{
+				label: 'Your Horizon',
+				//yAxisID: 'A',
+				fill: false,
+				borderColor: "rgba(75,191,192,1)",
+				data: horizon,
+				borderWidth: 0.5
+			},
+			{
+				label: 'Märzfrische',
+				//yAxisID: 'B',
+				fill: false,
+				borderColor: "rgba(255, 255, 0, 1)",
+				data: märzfrische,
+				borderWidth: 0.5
+			},
+			{
+				label: 'sommerday',
+				//yAxisID: 'B',
+				fill: false,
+				borderColor: "rgba(0, 0, 0, 1)",
+				data: sommerday,
+				borderWidth: 0.5
+			},
+			{
+				label: 'Winterzeit',
+				//yAxisID: 'B',
+				fill: false,
+				borderColor: "rgba(255, 0, 0, 1)",
+				data: Winterzeit,
+				borderWidth: 0.5
+			}]
+		};
+	var chartoptions = {
+			responsive: false,
+			legend: {
+				display: true
+			},
+			scales: {
+			xAxes: 
+				[{
+					ticks: {
+						//autoSkip: true,
+						//maxTicksLimit: 100
+					}
+				}],
+			yAxes:  [{
+						type: 'linear',
+						position: 'left',
+						ticks: {
+									min:0,
+									max: 90,
+									stepSize: 10
+								},
+								scaleLabel: {
+											display: true,
+											labelString: 'Winkel von Modul aus in Grad'
+										  }
+					  }]
+			}
+		}
+			var config={
+			type: 'line',
+			data: Dataset,
+			options: chartoptions
+		};
+		
+var ctx = document.getElementById("horizon").getContext('2d');
+	if(!myChart2){
+		myChart2 = new Chart(ctx, config);
+		}else{
+		myChart2.config.data = Dataset;
+		myChart2.options = chartoptions;
+		myChart2.update();
+		}
 }
 
-
-function drawrealskyyearly(realskyarray2) {
-    var gr=new jsGraphics(document.getElementById("canvas2"));
-    gr.setOrigin(new jsPoint(0,440));
-    gr.setCoordinateSystem("cartecian");
-    gr.showGrid(50);
-	gr.setScale(1);
-	var yscalerealsky=document.getElementById('yscalerealsky').value;
-	
-var d = document.getElementById('canvas2');
-d.style.position = "absolute";
-d.style.left = "330px";
-d.style.top = "1180px";
-
-    //Create jsColor object
-	
-    var redPen=new jsPen(new jsColor("red"),1);
-    var greenPen=new jsPen(new jsColor("green"),1);
-    var bluePen=new jsPen(new jsColor("blue"),1);
-    var grayPen=new jsPen(new jsColor("fuchsia"),1);
-var i=1;
-var b =0;
-var y1=0;
-var y2=0;
-var z1=0;
-var z2=0;
-	//console.log(realskyarray5);
-	while(i<366){
-	x1=(b);
-	y1=realskyarray2[i]/yscalerealsky;
-	i++;
-	b++;
-	x2=(b);
-	y2=realskyarray2[i]/yscalerealsky;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-	//var pt3 = new jsPoint(x1,z1);
-	//var pt4 = new jsPoint(x2,z2);
-    gr.drawLine(greenPen,pt1,pt2);
-	var curvePoints = new Array(pt1,pt2);
-	//var curvePoints2 = new Array(pt3,pt4);
-	gr.drawCurve(greenPen, curvePoints);
-	//gr.drawCurve(bluePen, curvePoints2);
-	//console.log(x1, z1, z2, x2);
-	}
+function drawrealskyyearly(realskyarray, clearskyarray) {
+var pvleistung = (document.getElementById('ratedpower').value*1);
+var realsky365tage = new Array;
+for (var j=1; j<=365;j++){
+	realsky365tage.push(realskyarray[j]);
+}
+var clearsky365tage = new Array;
+for (var j=1; j<=365;j++){
+	clearsky365tage.push(clearskyarray[j]);
+}
+//console.log(batteryarray3tage);
+var xbeschriftung365tage = new Array (365);
+for (var j=0; j<=(365);j++){
+xbeschriftung365tage[j]=j;
 }
 
+var Dataset = {
+			labels: xbeschriftung365tage,
+			datasets: [{
+				label: 'RealskyValue',
+				//yAxisID: 'A',
+				fill: false,
+				borderColor: "rgba(75,191,192,1)",
+				data: realsky365tage,
+				borderWidth: 0.5
+			},
+			{
+				label: 'ClearskyValue',
+				//yAxisID: 'B',
+				fill: false,
+				borderColor: "rgba(255, 0, 0, 1)",
+				data: clearsky365tage,
+				borderWidth: 0.5
+			}]
+		};
+var chartoptions = {
+			responsive: false,
+			legend: {
+				display: true
+			},
+			scales: {
+			xAxes: 
+				[{
+					ticks: {
+						autoSkip: true,
+						maxTicksLimit: 100
+					}
+				}],
+			yAxes:  [{
+						type: 'linear',
+						position: 'left',
+						ticks: {
+									min:0,
+									stepSize: (Math.round(Math.max(...clearsky365tage)/10))
+								},
+								scaleLabel: {
+											display: true,
+											labelString: 'Einstrahlung in Watt/m²'
+										  }
+					  }]
+			}
+		}
+		var config={
+			type: 'line',
+			data: Dataset,
+			options: chartoptions
+		};
 
-function drawrealsky(realskyarray) {
-var ratedpower = document.getElementById('ratedpower').value;
-//console.log(realskyarray);
-    var gr=new jsGraphics(document.getElementById("canvas1"));
-    gr.setOrigin(new jsPoint(0,440));
-    gr.setCoordinateSystem("cartecian");
-    gr.showGrid(10);
-	gr.setScale(1);
-	var scale=10; // for x-Axis
-	var yscale=document.getElementById('yscale').value;   // for y-axis
-	var d = document.getElementById('canvas1');
-d.style.position = "absolute";
-d.style.left = "0px";
-d.style.top = "1180px";
-	    var font=new jsFont("arial","bold","12px");
-
-    //Create jsColor object
-	
-    var redPen=new jsPen(new jsColor("red"),1);
-    var greenPen=new jsPen(new jsColor("green"),1);
-    var bluePen=new jsPen(new jsColor("blue"),1);
-    var grayPen=new jsPen(new jsColor("fuchsia"),1);
-var i=0;
-var b =0;
-	while(i<24){
-	x1=(scale*b);
-	y1=realskyarray[81][i]/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	y2=realskyarray[81][i]/yscale;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-    gr.drawLine(redPen,pt1,pt2);
-	//console.log(x1, y1, y2, x2);
-	}
-	gr.drawText("Märzfrische",new jsPoint(200,250),font,redPen.color,90);
-i=0;
-b=0;
-	while(i<24){
-	x1=(scale*b);
-	y1=realskyarray[180][i]/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	y2=realskyarray[180][i]/yscale;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-    gr.drawLine(bluePen,pt1,pt2);
-	//console.log(x1, y1, y2, x2);
-	}
-gr.drawText("Summerday",new jsPoint(200,220),font,bluePen.color,90);
-i=0;
-b=0;
-	while(i<24){
-	x1=(scale*b);
-	y1=realskyarray[261][i]/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	y2=realskyarray[261][i]/yscale;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-    gr.drawLine(greenPen,pt1,pt2);
-	//console.log(x1, y1, y2, x2);
-	}
-	gr.drawText("Herbstzeit",new jsPoint(200,190),font,greenPen.color,90);
-i=0;
-b=0;
-	while(i<24){
-	x1=(scale*b);
-	y1=realskyarray[360][i]/yscale;
-	i++;
-	b++;
-	x2=(scale*b);
-	y2=realskyarray[360][i]/yscale;
-    var pt1 = new jsPoint(x1,y1);
-    var pt2 = new jsPoint(x2,y2);
-    gr.drawLine(grayPen,pt1,pt2);
-	//console.log(x1, y1, y2, x2);
-	}
-	gr.drawText("Dezember",new jsPoint(200,170),font,grayPen.color,90);
-
-    //You can also code with inline object instantiation like below
-    //gr.drawLine(pen,new jsPoint(40,10),new jsPoint(70,150
+var ctx = document.getElementById("yearlysolar").getContext('2d');
+		if(!myChart3){
+		myChart3 = new Chart(ctx, config);
+		}else{
+		myChart3.config.data = Dataset;
+		myChart3.options = chartoptions;
+		myChart3.update();
+		}
 }
 </script>
 
