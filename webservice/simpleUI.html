@@ -64,7 +64,7 @@ margin-left: 0px;
 }
 </style>
 </head>
-<body onload="refreshhorizon()">
+<body onload="refreshhorizon()" onchange="refreshwhperday()">
 <div class="container">
 	<div class="card">
 		<h4 class="card-header">Solar Reporter</h4>
@@ -87,8 +87,8 @@ margin-left: 0px;
 	Verbraucher in Watt:
 	<input id="verbraucher" value="150" type="number" name="verbraucher" size="5">
 
-	Wattstunden per Cycle:
-	<input id="whpercycle" value="100" type="number" name="whpercycle" size="5"><br></br>
+	Wattstunden am Tag:
+	<input id="whperday" value="configure the profil" type="text" name="whperday" size="15"><br></br>
 	 
 	<select id="profilauswahl" onload="refreshprofil()" onchange="refreshprofil()">
 	  <option value="0">Erstelle app-profil</option>
@@ -252,7 +252,7 @@ var latitude = document.getElementById('latitude').value;
 var longitude = document.getElementById('longitude').value;
 refresher(latitude,longitude);
 }
-
+// extra function to refresh the charts seperatly. should be combined with function anfangarsch() in a object
 function refresher(lat, lng)
 {
     var request = {
@@ -272,12 +272,15 @@ function refresher(lat, lng)
 		showhorizont(realskyaverage);
 }})
 }
+
 function setyear(){
 html5Slider.noUiSlider.set([1, 365]);
 }
+
 function setwowinter(){
 html5Slider.noUiSlider.set([81, 264]);
 }
+
 var html5Slider = document.getElementById('html5Slider');
 
 noUiSlider.create(html5Slider, {
@@ -366,13 +369,15 @@ horizon[1]=[0, 0, 30, 40, 45, 45, 45, 40, 45, 60, 60, 60, 60];
 function refreshprofil(){
 for (var i=0; i<24; i++){
 	var regler = document.getElementById(i);
-	profilauswahl=document.getElementById('profilauswahl').value;
+	var profilauswahl=document.getElementById('profilauswahl').value;
 	profilersteller=app[profilauswahl][i];
 	regler.noUiSlider.set(profilersteller);
 }
 var verbraucher = document.getElementById('verbraucher');
 verbraucher.value = app[profilauswahl][24];
 };
+
+
 function horizonbeschriftung(){
 var moduleazi = (document.getElementById('moduleazi').value*1);
 var j = 0;
@@ -406,6 +411,22 @@ for (var x=100; x<113; x++){
 }
 refresh();
 }
+
+//show the whperday after every changing
+function refreshwhperday()
+{
+var watt = (document.getElementById('verbraucher').value*1);
+var whperday = document.getElementById('whperday');
+var timesum = 0;
+for (var i=0; i<24; i++){
+	var regler = document.getElementById(i);
+	timesum += (regler.noUiSlider.get()*1);
+}
+whperday.value = timesum*watt;
+}
+
+
+
 function getsunblock(){
 var moduleazi = (document.getElementById('moduleazi').value*1);
 var sunblock = new Array(24);
@@ -595,7 +616,7 @@ var anfang = (document.getElementById('anfang').value*1);
 var ende = (document.getElementById('ende').value*1);
 var verbraucher = document.getElementById('verbraucher').value;
 var ratedpower = document.getElementById('ratedpower').value;
-var whpercycle = document.getElementById('whpercycle').value;
+var whpercycle = document.getElementById('whperday').value;
 var batterysize = document.getElementById('batterysize').value;
 
 var appprofil = new Array(24);
