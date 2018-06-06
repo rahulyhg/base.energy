@@ -24,38 +24,26 @@ $lat = round($latLng->lat); // e.g. rounding lat 57.4356 to 57 which is in datab
 $lng = round($latLng->lng);
 
 //--------------------------------------------------------------------------
-// 1) Connect to mysql database^and query data
+// Connect to mysql database^and query data
 //--------------------------------------------------------------------------
-
-// how to handle passwords for public repositories in GitHub
-// See https://www.reddit.com/r/learnprogramming/comments/3wkf4w/php_how_do_i_use_github_without_revealing_mysql/
-include('dbaccess.php');
-$host = DBHOST;
-$user = DBUSER; // Never put real user names in here (public repository)
-$password = DBPASSWORD; // Never put real passwords in here (public repository)
-$database = DB;
-
-
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$database", $user, $password);
-    // set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	// get variable $conn with access to mysql
+	include('dbaccess.php');
 	
 	$stmt = $conn->prepare("SELECT jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dez FROM GHI WHERE lat=$lat AND lng=$lng");
 	$stmt->execute();
     
-	$result = $stmt-> fetch();
-	
-	
+	$result = $stmt-> fetch();	
 }
 catch(PDOException $e){
     echo "Error: " . $e->getMessage();
+	return;
 }
 
 
 
 //--------------------------------------------------------------------------
-// 3) echo result as json 
+// echo result as json 
 //--------------------------------------------------------------------------
 echo json_encode($result);
 
