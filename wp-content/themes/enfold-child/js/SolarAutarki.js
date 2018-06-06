@@ -284,7 +284,7 @@ function ClearskyValue(latitude, tilt, moduleazi){
 		}
 			
 		}
-		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tilt))+(Math.cos(sunaltitude)*Math.sin(tilt)*Math.cos(moduleazirad-sunazimutnow))), -6);
+		var cosdeta = Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
 		cosdetahourly[jahrestag][tagesstunde]=Math.round10(((Math.sin(sunaltitude)*Math.cos(tiltrad))+(Math.cos(sunaltitude)*Math.sin(tiltrad)*Math.cos(moduleazirad-sunazimutnow))), -6);
 		sunazimuthhourly[jahrestag][tagesstunde]=Math.round10(sunazimutnow, -2);
 		sunaltitudehourly[jahrestag][tagesstunde]=Math.round10(sunaltitude, -2);
