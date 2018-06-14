@@ -204,7 +204,7 @@ margin-left: 0px;
 </div>	
 </div>
 </form>
-	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapsecards" aria-expanded="false" aria-controls="collapsecards" onClick="anfangarsch()">
+	<button class="btn btn-primary" type="button" data-target="#collapsecards" aria-expanded="false" aria-controls="collapsecards" onClick="anfangarsch()">
 	which SolCube?
   </button>
 <div class="collapse" id="collapsecards">
@@ -212,8 +212,8 @@ margin-left: 0px;
   <div class="card">
     <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+      <h5 class="card-title">SolCube</h5>
+      <p id="2weak" class="card-text"></p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
     </div>
   </div>
@@ -221,7 +221,7 @@ margin-left: 0px;
     <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Card title</h5>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+      <p id="good" class="card-text"></p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
     </div>
   </div>
@@ -229,14 +229,14 @@ margin-left: 0px;
     <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+      <p id="outstanding" class="card-text"></p>
       <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
     </div>
   </div>
 </div>	
 </div>	
 	<br>
-	<table id="autarkitable">
+	<!--table id="autarkitable">
 	  <tr>
 		<th id="überschrift">solare Autarkie</th>
 		<th>PV 100W</th>
@@ -282,7 +282,7 @@ margin-left: 0px;
 		<td id="120300w">tbc tbc</td>
 		<td id="120500w">tbc tbc</td>
 	  </tr>
-	</table>
+	</table-->
 	
 <div class="card" style="width: 18rem;">
   <div class="card-body">
@@ -486,14 +486,14 @@ var verbraucher = (document.getElementById('verbraucher').value*1);
 var appname = $('select[id=profilauswahl]');
 var appobject;
 appobject="appid"+number+"";
-var pickedapp = $('<div class="input-group mb-3" id="'+appobject+'" data-power="'+verbraucher+'" data-profil="'+appprofil+'"><input type="text" class="form-control" placeholder="'+appname.children(':selected').text()+' Leistung: '+verbraucher+'Watt" aria-label="app" aria-describedby="basic-addon2"><div class="input-group-append"><button class="btn btn-outline-secondary" type="button" onClick="editapp()">Edit Profil</button></div></div>');
+var pickedapp = $('<div class="input-group mb-3" id="'+appobject+'" data-power="'+verbraucher+'" data-profil="'+appprofil+'"><input type="text" class="form-control" placeholder="'+appname.children(':selected').text()+' Leistung: '+verbraucher+'Watt" aria-label="app" aria-describedby="basic-addon2"><div class="input-group-append"><button class="btn btn-outline-secondary" type="button" onClick="editapp('+appobject+')">Edit Profil</button></div></div>');
 $('#applist').append(pickedapp);
 number++;
 //console.log(document.getElementById('appid1').getAttribute("data-profil"));
 }
 
-function editapp(){
-
+function editapp(appobject){
+$('#'+appobject.id+'').remove();
 }
 	
 function refreshprofil(){
@@ -653,7 +653,9 @@ var schieber = document.getElementsByClassName('schieber');
 	});
 
 function anfangarsch(){
-
+$('#collapsecards').show({
+  toggle: false
+})
 var latitude = document.getElementById('latitude').value;
 var longitude = document.getElementById('longitude').value;
 getGhi(latitude,longitude);
@@ -676,10 +678,10 @@ function getGhi(lat, lng)
 		showbatterystatus(realskyaverage);
 		showsolaryearly(realskyaverage);
 		showhorizont(realskyaverage);
-		showtherest(realskyaverage, 216, 100, "18100w");
-		showtherest(realskyaverage, 216, 150, "18150w");
-		showtherest(realskyaverage, 216, 200, "18200w");
-		showtherest(realskyaverage, 216, 250, "18250w");
+		showtherest(realskyaverage, 216, 150, "2weak");
+		showtherest(realskyaverage, 450, 250, "good");
+		showtherest(realskyaverage, 720, 400, "outstanding");
+		/*showtherest(realskyaverage, 216, 250, "18250w");
 		showtherest(realskyaverage, 216, 300, "18300w");
 		showtherest(realskyaverage, 216, 500, "18500w");
 		showtherest(realskyaverage, 456, 100, "38100w");
@@ -699,7 +701,7 @@ function getGhi(lat, lng)
 		showtherest(realskyaverage, 1440, 200, "120200w");
 		showtherest(realskyaverage, 1440, 250, "120250w");
 		showtherest(realskyaverage, 1440, 300, "120300w");
-		showtherest(realskyaverage, 1440, 500, "120500w");
+		showtherest(realskyaverage, 1440, 500, "120500w");*/
 	   
       }
     });
@@ -765,8 +767,13 @@ appprofil[i] = 0;
 for (var i=0; i<24; i++){
 for (var x = 1; x < number; x++){
 var appfinder = "appid"+x+"";
+try{
 var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
 var watt = (document.getElementById(appfinder).getAttribute("data-power")*1)
+}catch {
+var verbrauchsprofil = "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.93,0.96,1.00,0.50,0.00,0.00,0.00";
+var watt = 0;
+}
 var vbrprofil = verbrauchsprofil.split(",");
 var vbrprofilint = (vbrprofil[i]*1);
 	appprofil[i] += (watt*vbrprofilint);
@@ -822,10 +829,18 @@ var whpercycle = document.getElementById('whperday').value;
 
 var appprofil = new Array(24);
 for (var i=0; i<24; i++){
+appprofil[i] = 0;
+}
+for (var i=0; i<24; i++){
 for (var x = 1; x < number; x++){
 var appfinder = "appid"+x+"";
+try{
 var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
 var watt = (document.getElementById(appfinder).getAttribute("data-power")*1)
+}catch {
+var verbrauchsprofil = "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.93,0.96,1.00,0.50,0.00,0.00,0.00";
+var watt = 0;
+}
 var vbrprofil = verbrauchsprofil.split(",");
 	appprofil[i] += (watt*vbrprofil[i]);
 }
