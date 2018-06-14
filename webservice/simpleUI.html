@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Solar Report</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<script src="../wp-content/themes/enfold-child/js/nouislider.min.js"></script>
@@ -12,6 +13,9 @@
 	<!-- Charts JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <style>
+#batterystatuschart {
+background-image: url("batterystatus.png");
+}
 .behaelter {
 margin-left: 0px;
 }
@@ -69,29 +73,94 @@ margin-left: 0px;
 	<div class="card">
 		<h4 class="card-header">Solar Reporter</h4>
 	<form action="#" >
-	anfang:
-	<input id="anfang" type="text" name="anfang">
-	Ende:
-	<input id="ende" type="text" name="ende" size="5"> 
-	Lat:
-	<input id="latitude" value="48.19" type="text" name="latitude" size="5">
-	longitude:
-	<input id="longitude" value="16" type="text" name="longitude" size="5">
-	  <input type="radio" onClick="setyear()"> ganzes Jahr
-	  <input type="radio" onClick="setwowinter()"> ohne Winter
-	 <br>
-	 <br>
+	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseLocation" aria-expanded="false" aria-controls="collapseLocation">
+	Location
+  </button>
+  <div class="collapse" id="collapseLocation">
+  <div class="card card-body">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon3">Lat</span>
+  </div>
+  <input id='latitude' value="48.19" type="number" class="form-control" aria-label="latitude" aria-describedby="basic-addon3">
+    <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon4">Long</span>
+  </div>
+  <input id='longitude' value="16" type="number" class="form-control" aria-label="longitude" aria-describedby="basic-addon4">
+    <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Anfang</span>
+  </div>
+  <input id='anfang' type="text" class="form-control" aria-label="anfang" aria-describedby="basic-addon1">
+    <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon2">Ende</span>
+  </div>
+  <input id='ende' type="text" class="form-control" aria-label="ende" aria-describedby="basic-addon2">
+    <div class="input-group-prepend">
+    <div class="input-group-text">
+	<input type="radio" name='timeframe' onClick="setwowinter()"> ohne Winter
+    </div>
+	    <div class="input-group-text">
+	<input type="radio" name='timeframe' onClick="setyear()"> ganzes Jahr
+    </div>
+  </div>
+</div>
 	<div id="html5Slider"></div><br>
-
-
-	Verbraucher in Watt:
-	<input id="verbraucher" value="150" type="number" name="verbraucher" size="5">
-
-	Wattstunden am Tag:
-	<input id="whperday" value="configure the profil" type="text" name="whperday" size="15"><br></br>
-	 
-	<select id="profilauswahl" onload="refreshprofil()" onchange="refreshprofil()">
-	  <option value="0">Erstelle app-profil</option>
+		  </div>
+</div>
+	  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseHorizon" aria-expanded="false" aria-controls="collapseHorizon">
+	Erstelle horizontal file
+  </button>
+<div class="collapse" id="collapseHorizon">
+  <div class="card card-body">
+	<select id="horizontauswahl" onload="refreshhorizon()" onchange="refreshhorizon()">
+	  <option value="0">Ebene</option>
+	  <option value="1">Aspangstrasse</option>
+	  </select><br><br>
+	<div class="behaelter">
+	<b id='25'>0 </b><div class="schieber" id="100"></div>
+	<b id='26'>0 </b><div class="schieber" id="101"></div>
+	<b id='27'>0 </b><div class="schieber" id="102"></div>
+	<b id='28'>0 </b><div class="schieber" id="103"></div>
+	<b id='29'>0 </b><div class="schieber" id="104"></div>
+	<b id='30'>0 </b><div class="schieber" id="105"></div>
+	<b id='31'>0 </b><div class="schieber" id="106"></div>
+	<b id='32'>0 </b><div class="schieber" id="107"></div>
+	<b id='33'>0 </b><div class="schieber" id="108"></div>
+	<b id='34'>0 </b><div class="schieber" id="109"></div>
+	<b id='35'>0 </b><div class="schieber" id="110"></div>
+	<b id='36'>0 </b><div class="schieber" id="111"></div>
+	<b id='37'>0 </b><div class="schieber" id="112"></div>
+	</div>
+	  </div>
+</div>
+<div class="card">
+  <div  class="card-body">
+  <div id='applist' class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text">Verbraucher</span>
+  </div>
+  <input id="verbraucher" type="number" class="form-control" value='0'>
+  <div class="input-group-append">
+    <span class="input-group-text">W</span>
+  </div>
+    <div class="input-group-prepend">
+    <span class="input-group-text">Leistung insgesammt</span>
+  </div>
+  <input id="verbrauchtotal" type="number" class="form-control" value='0'>
+  <div class="input-group-append">
+    <span class="input-group-text">W</span>
+  </div>
+    <div class="input-group-prepend">
+    <span class="input-group-text">Wattstunden am Tag</span>
+  </div>
+  <input id="whperday" type="text" class="form-control" value='configure the profil'>
+  <div class="input-group-append">
+    <span class="input-group-text">Wh/d</span>
+  </div>
+</div>
+<div id='appprofiler'>
+<select id="profilauswahl" onchange="refreshprofil()">
+	<option value="" selected disabled hidden>Erstelle app-profil</option>
 	  <option value="0">light</option>
 	  <option value="1">smartphone</option>
 	  <option value="2">E-bike</option>
@@ -104,7 +173,7 @@ margin-left: 0px;
 	  <option value="9">säge</option>
 	  <option value="10">küchenmaschine</option>
 	  <option value="11">ventilator</option>
-	</select><br><br>
+	</select> <button class="btn btn-outline-secondary" type="button" onClick='addapp()'>App hinzufügen</button><br><br>
 	<div class="behaelter">
 	1<div class="sliders" id="0"></div>
 	2<div class="sliders" id="1"></div>
@@ -130,29 +199,11 @@ margin-left: 0px;
 	22<div class="sliders" id="21"></div>
 	23<div class="sliders" id="22"></div>
 	24<div class="sliders" id="23"></div>
-	</div><br>
-	<br>
-	Erstelle horizontal file
-	<select id="horizontauswahl" onload="refreshhorizon()" onchange="refreshhorizon()">
-	  <option value="0">Ebene</option>
-	  <option value="1">Aspangstrasse</option>
-	  </select><br><br>
-	<div class="behaelter">
-	<b id='25'>0 </b><div class="schieber" id="100"></div>
-	<b id='26'>0 </b><div class="schieber" id="101"></div>
-	<b id='27'>0 </b><div class="schieber" id="102"></div>
-	<b id='28'>0 </b><div class="schieber" id="103"></div>
-	<b id='29'>0 </b><div class="schieber" id="104"></div>
-	<b id='30'>0 </b><div class="schieber" id="105"></div>
-	<b id='31'>0 </b><div class="schieber" id="106"></div>
-	<b id='32'>0 </b><div class="schieber" id="107"></div>
-	<b id='33'>0 </b><div class="schieber" id="108"></div>
-	<b id='34'>0 </b><div class="schieber" id="109"></div>
-	<b id='35'>0 </b><div class="schieber" id="110"></div>
-	<b id='36'>0 </b><div class="schieber" id="111"></div>
-	<b id='37'>0 </b><div class="schieber" id="112"></div>
-	</div><br>
-	</form>	
+	</div>
+</div>	
+</div>	
+</div>
+</form>	
 	<br>
 	<table id="autarkitable">
 	  <tr>
@@ -201,14 +252,38 @@ margin-left: 0px;
 		<td id="120500w">tbc tbc</td>
 	  </tr>
 	</table>
-	batterysize:
-	<input id="batterysize" value="216" type="number" name="batterysize" size="5">
-	ratedpower in Wattpeak:
-	<input id="ratedpower" value="150" type="number" name="ratedpower" size="5">
-	Tilt:
-	<input id="tilt" value="90" type="number" min="0" max="90" step="5" size="5" onload="refresh()" onchange="refresh()">
-	ModuleAzi:
-	<select id="moduleazi" onload="refreshhorizon()" onchange="refreshhorizon()" >
+	
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+  <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text">batterysize</span>
+  </div>
+  <input id="batterysize" type="number" class="form-control" value='216'>
+  <div class="input-group-append">
+    <span class="input-group-text">Wh</span>
+  </div>
+</div>
+  <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text">rated Power</span>
+  </div>
+  <input id="ratedpower" type="number" class="form-control" value='150'>
+  <div class="input-group-append">
+    <span class="input-group-text">Wp</span>
+  </div>
+</div>
+  <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text">Tilt</span>
+  </div>
+  <input id="tilt" type="number" min="0" max="90" step="5" class="form-control" value='90' onload="refresh()" onchange="refresh()">
+  </div>
+    <div class="input-group mb-3">
+    <div class="input-group-prepend">
+    <span class="input-group-text">ModuleAzi</span>
+  </div>
+  <select id="moduleazi" class="custom-select" onload="refreshhorizon()" onchange="refreshhorizon()" >
 	<option value="0">Norden</option>
 	  <option value="15">15</option>
 	  <option value="30">30</option>
@@ -233,9 +308,12 @@ margin-left: 0px;
 	  <option value="315">Nord-West</option>
 	  <option value="330">330</option>
 	  <option value="345">345</option>
-	</select>	<br>
+	</select>
+</div>
 	<input type="submit" class='button' value="start" onClick="anfangarsch()">
 	<input type="submit" class='button' value="refresh charts" onClick="refresh()">
+	</div>	
+	</div>
 		<canvas id="batterystatuschart" style="width:800px;height:600px;"></canvas>
 		<canvas id="yearlysolar" style="width:800px;height:440px;"></canvas>
 		<canvas id="horizon" style="width:800px;height:440px;"></canvas>
@@ -247,6 +325,7 @@ var endday = document.getElementById('ende');
 var myChart1;
 var myChart2;
 var myChart3;
+var number=1;
 function refresh(){
 var latitude = document.getElementById('latitude').value;
 var longitude = document.getElementById('longitude').value;
@@ -365,6 +444,26 @@ app[12] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.93, 0.96, 1, 0.5
 var horizon =new Array(13);
 horizon[0]=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
 horizon[1]=[0, 0, 30, 40, 45, 45, 45, 40, 45, 60, 60, 60, 60];
+
+function addapp(){
+var appprofil = new Array(24);
+for (var i=0; i<24; i++){
+	var wert = document.getElementById(i);
+	appprofil[i]=wert.noUiSlider.get();
+}
+var verbraucher = (document.getElementById('verbraucher').value*1);
+var appname = $('select[id=profilauswahl]');
+var appobject;
+appobject="appid"+number+"";
+var pickedapp = $('<div class="input-group mb-3" id="'+appobject+'" data-power="'+verbraucher+'" data-profil="'+appprofil+'"><input type="text" class="form-control" placeholder="'+appname.children(':selected').text()+' Leistung: '+verbraucher+'Watt" aria-label="app" aria-describedby="basic-addon2"><div class="input-group-append"><button class="btn btn-outline-secondary" type="button" onClick="editapp()">Edit Profil</button></div></div>');
+$('#applist').append(pickedapp);
+number++;
+//console.log(document.getElementById('appid1').getAttribute("data-profil"));
+}
+
+function editapp(){
+
+}
 	
 function refreshprofil(){
 for (var i=0; i<24; i++){
@@ -375,8 +474,7 @@ for (var i=0; i<24; i++){
 }
 var verbraucher = document.getElementById('verbraucher');
 verbraucher.value = app[profilauswahl][24];
-};
-
+}
 
 function horizonbeschriftung(){
 var moduleazi = (document.getElementById('moduleazi').value*1);
@@ -415,14 +513,24 @@ refresh();
 //show the whperday after every changing
 function refreshwhperday()
 {
-var watt = (document.getElementById('verbraucher').value*1);
-var whperday = document.getElementById('whperday');
 var timesum = 0;
+var wattsum = 0;
+for (var x = 1; x < number; x++){
+var timesumapp = 0;
+var appfinder = "appid"+x+"";
+var watt = (document.getElementById(appfinder).getAttribute("data-power")*1);
+var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
+var vbrprofil = verbrauchsprofil.split(",");
 for (var i=0; i<24; i++){
-	var regler = document.getElementById(i);
-	timesum += (regler.noUiSlider.get()*1);
+	timesumapp += (vbrprofil[i]*1);
 }
-whperday.value = timesum*watt;
+timesum += timesumapp*watt
+wattsum += watt;
+}
+var whperday = document.getElementById('whperday');
+var verbraucher = document.getElementById('verbrauchtotal');
+whperday.value = Math.round10(timesum);
+verbraucher.value = wattsum;
 }
 
 
@@ -614,23 +722,34 @@ var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
 var anfang = (document.getElementById('anfang').value*1);
 var ende = (document.getElementById('ende').value*1);
-var verbraucher = document.getElementById('verbraucher').value;
+var verbraucher = document.getElementById('verbrauchtotal').value;
 var ratedpower = document.getElementById('ratedpower').value;
 var whpercycle = document.getElementById('whperday').value;
 var batterysize = document.getElementById('batterysize').value;
 
 var appprofil = new Array(24);
 for (var i=0; i<24; i++){
-	var wert = document.getElementById(i);
-	appprofil[i]=wert.noUiSlider.get();
+appprofil[i] = 0;
+}
+for (var i=0; i<24; i++){
+for (var x = 1; x < number; x++){
+var appfinder = "appid"+x+"";
+var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
+var watt = (document.getElementById(appfinder).getAttribute("data-power")*1)
+var vbrprofil = verbrauchsprofil.split(",");
+var vbrprofilint = (vbrprofil[i]*1);
+	appprofil[i] += (watt*vbrprofilint);
+	//console.log(typeof (watt*(vbrprofil[i]*1)));
+}
 }
 var sunblock = getsunblock();
 //console.log(sunblock);
 
-var realsky = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
-var realskyarray = realsky[0];
-var battery = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
+//var realsky = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
+
+var battery = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, appprofil, anfang, ende, sunblock, 3);
 var batteryarray = battery[3];
+var realskyarray = battery[4];
 drawbatterystatus(batteryarray, realskyarray);
 }
 
@@ -668,22 +787,27 @@ var moduleazi = document.getElementById('moduleazi').value;
 var anfang = (document.getElementById('anfang').value*1);
 var ende = (document.getElementById('ende').value*1);
 var verbraucher = document.getElementById('verbraucher').value;
-var whpercycle = document.getElementById('whpercycle').value;
+var whpercycle = document.getElementById('whperday').value;
 
 var appprofil = new Array(24);
 for (var i=0; i<24; i++){
-	var wert = document.getElementById(i);
-	appprofil[i]=wert.noUiSlider.get();
+for (var x = 1; x < number; x++){
+var appfinder = "appid"+x+"";
+var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
+var watt = (document.getElementById(appfinder).getAttribute("data-power")*1)
+var vbrprofil = verbrauchsprofil.split(",");
+	appprofil[i] += (watt*vbrprofil[i]);
+}
 }
 
 var sunblock = getsunblock();
-var zombieapo=getzombiemode(batterysize, verbraucher, appprofil);
+var zombieapo=getzombiemode(batterysize, appprofil);
 //console.log("zombieapocalypsemode " +zombieapo);
 var chargetime=getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, sunblock);
 //console.log("chargetime is " + chargetime);
 var peakcycle = getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
 //console.log("peakcycle "+peakcycle);
-var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, appprofil, anfang, ende, sunblock);
+var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, appprofil, anfang, ende, sunblock);
 var solarautarkie = cyclecounter[2];
 
 if(solarautarkie > 0.85){
@@ -703,7 +827,7 @@ function drawbatterystatus(batteryarray, realskyarray){
 	var realsky3tage = new Array;
 	for (var j=anfang; j<=(anfang+2);j++){
 	var i=0;
-		while(i<23){
+		while(i<24){
 		realsky3tage.push(realskyarray[j][i]);
 		i++
 		}
@@ -711,7 +835,7 @@ function drawbatterystatus(batteryarray, realskyarray){
 	var batteryarray3tage = new Array;
 	for (var j=anfang; j<=(anfang+2);j++){
 	var i=0;
-		while(i<23){
+		while(i<24){
 		batteryarray3tage.push(((batteryarray[j][i]/batterysize)*100));
 		i++
 		}
@@ -754,7 +878,7 @@ function drawbatterystatus(batteryarray, realskyarray){
 					[{
 						ticks: {
 							autoSkip: true,
-							maxTicksLimit: 36
+							maxTicksLimit: 12
 						}
 					}],
 					yAxes:  [{
@@ -790,7 +914,10 @@ function drawbatterystatus(batteryarray, realskyarray){
 													labelString: 'PV-Ertrag in Watt'
 												  }
 							}]
-				}
+				}/*,
+				chartArea: {
+					backgroundColor: 'rgba(251, 85, 0, 0.4)'
+				}*/
 			}
 	
 	var config={
@@ -993,6 +1120,31 @@ var ctx = document.getElementById("yearlysolar").getContext('2d');
 		myChart3.update();
 		}
 }
-</script>
+//needed for drawing night
+		Chart.pluginService.register({
+			beforeDraw: function (chart, easing) {
+				if (chart.config.options.chartArea && chart.config.options.chartArea.backgroundColor) {
+					var helpers = Chart.helpers;
+					var ctx = chart.chart.ctx;
+					var chartArea = chart.chartArea;
 
+          var columnCount = chart.data.datasets[0].data.length;
+          var width = chartArea.right - chartArea.left;
+          var height = chartArea.bottom - chartArea.top
+
+					var columnWidth = width*(0.66);
+					ctx.save();
+					ctx.fillStyle = chart.config.options.chartArea.backgroundColor;
+          var startPoint = chartArea.left
+          while (startPoint < chartArea.right) {
+          	ctx.fillRect(startPoint, chartArea.top, columnWidth, height);
+            startPoint += columnWidth * 2;
+          }
+					ctx.restore();
+				}
+			}
+		});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>

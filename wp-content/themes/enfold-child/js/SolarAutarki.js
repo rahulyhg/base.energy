@@ -441,9 +441,11 @@ function getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, rat
 	return (maxcycles);
 }
 
-function CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, verbraucher, whpercycle, app, anfang, ende, sunblock) {
+function CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, app, anfang, ende, sunblock, showcase) {
+	//für 3tages forcast
+	if (showcase === undefined) {showcase=1;}
 //var cycletime = whpercycle/verbraucher // time per cycle in hours
-batterysize = crate(batterysize, verbraucher);
+//batterysize = crate(batterysize, verbraucher); zu komplex mit mehreren verbrauchern. außerderm laden mit sonne stimmt dann auch nicht
 //console.log("batterysize = "+(batterysize)+ " Wh am: "+anfang);
 var batterystatus= new Array(366);
 for (var i=0; i<366; i++){
@@ -461,11 +463,14 @@ var cyclecounter2=0;
 //get cycles with realsky
 var realskyvalue = RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
 var realsky = realskyvalue[0];
+for (var k = 0; k<24; k++){
+realsky[(anfang+2)][k] = (realsky[(anfang+2)][k]/(showcase));
+}
 var realskydaily=realskyvalue[2]
 	for (var jahrestag=anfang; jahrestag<=ende;jahrestag++){
 		var month=jahrestagzumonat(jahrestag);
 		for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
-		var	output= verbraucher* app[tagesstunde];
+		var	output= app[tagesstunde];
 		if (output==NaN){
 			console.log("output NaN punkt statt komma bei dezimalstelle");
 		}
@@ -541,18 +546,19 @@ var realskydaily=realskyvalue[2]
 		}
 	var basecycleyearly = Math.floor(cyclecounter/ende);
 	solarautarkie = cyclecounter/(cyclecounter+cyclecounter2);
-	var resultscsv = new Array (4);
+	var resultscsv = new Array (5);
 	resultscsv[0] = peakcycle;
 	resultscsv[1] = basecycle;
 	resultscsv[2] = solarautarkie;
 	resultscsv[3] = batterystatus;
+	resultscsv[4] = realsky;
 return (resultscsv);
 }
 
-function getzombiemode(batterysize, verbraucher, app){
+function getzombiemode(batterysize, app){
 
 var hourcounter =0;
-batterysize = crate(batterysize,verbraucher);
+//batterysize = crate(batterysize,verbraucher);
 var batterystatus= new Array(366);
 for (var i=0; i<366; i++){
 	batterystatus[i]= new Array(24);
@@ -562,7 +568,7 @@ for (var jahrestag=40; jahrestag<=365;jahrestag++){
 	var month=jahrestagzumonat(jahrestag);
 	for (var tagesstunde=0;tagesstunde<=23;tagesstunde++){
 		hourcounter +=1;
-	var	output= verbraucher*app[tagesstunde];
+	var	output= app[tagesstunde];
 		batterystatus[jahrestag][tagesstunde]=0;
 		switch(tagesstunde){
 		case 0:
