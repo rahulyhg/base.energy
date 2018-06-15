@@ -113,3 +113,17 @@ text-align: left !important;
 #jp-relatedposts{
 display:none !important;
 }
+
+/* Fix intend by hiding first column in woocommerce single product page variations description */
+.yith-wcpb-product-bundled-item-image {
+	display:none;
+	
+}
+.single_variation_wrap {
+	margin-left: 0px !important;
+}
+
+/* fix single product shortcode */
+.products.columns-1 li {
+  width:100% !important;
+}
