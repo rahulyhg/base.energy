@@ -210,81 +210,35 @@ margin-left: 0px;
 <div class="collapse" id="collapsecards">
 <div class="card-group">
   <div class="card">
-    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
+    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleSmall.png" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">SolCube</h5>
+      <h5 class="card-title">SolCube basic</h5>
+	  <ul id="basiclist" class="list-group"></ul>
       <p id="2weak" class="card-text"></p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+	  <button id ='basic' type="button" class="btn btn-primary" onClick="refresh(this.id)">show in chart</button>
     </div>
   </div>
   <div class="card">
     <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
+      <h5 class="card-title">SolCube Pro</h5>
+	  <ul id="prolist" class="list-group"></ul>
       <p id="good" class="card-text"></p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+	  <button id ='pro' type="button" class="btn btn-primary" onClick="refresh(this.id)">show in chart</button>
     </div>
   </div>
   <div class="card">
-    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
+    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/module2xMedium.png" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">Card title</h5>
+      <h5 class="card-title">SolCube Ultimate</h5>
+	  <ul id="ultimatelist" class="list-group"></ul>
       <p id="outstanding" class="card-text"></p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+	  <button id ='ultimate' type="button" class="btn btn-primary" onClick="refresh(this.id)">show in chart</button>
     </div>
   </div>
 </div>	
 </div>	
-	<br>
-	<!--table id="autarkitable">
-	  <tr>
-		<th id="überschrift">solare Autarkie</th>
-		<th>PV 100W</th>
-		<th>PV 150W</th>
-		<th>PV 200W</th>
-		<th>PV 250W</th>
-		<th>PV 300W</th>
-		<th>PV 500W</th>
-	  </tr>
-	  <tr>
-		<th>Capacity 18Ah = 216 Wh</th>
-		<td id="18100w">tbc</td>
-		<td id="18150w">tbc</td>
-		<td id="18200w">tbc tbc</td>
-		<td id="18250w">tbc tbc</td>
-		<td id="18300w">tbc tbc</td>
-		<td id="18500w">tbc tbc</td>
-	  </tr>
-	  <tr>
-		<th>Capacity 38Ah = 456 Wh</th>
-		<td id="38100w">tbc</td>
-		<td id="38150w">tbc</td>
-		<td id="38200w">tbc tbc</td>
-		<td id="38250w">tbc tbc</td>
-		<td id="38300w">tbc tbc</td>
-		<td id="38500w">tbc tbc</td>
-	  </tr>
-	  <tr>
-		<th>Capacity 60Ah = 720 Wh</th>
-		<td id="60100w">tbc</td>
-		<td id="60150w">tbc</td>
-		<td id="60200w">tbc tbc</td>
-		<td id="60250w">tbc tbc</td>
-		<td id="60300w">tbc tbc</td>
-		<td id="60500w">tbc tbc</td>
-	  </tr>
-		<tr>
-		<th>Capacity 120Ah = 1440 Wh</th>
-		<td id="120100w">tbc</td>
-		<td id="120150w">tbc</td>
-		<td id="120200w">tbc tbc</td>
-		<td id="120250w">tbc tbc</td>
-		<td id="120300w">tbc tbc</td>
-		<td id="120500w">tbc tbc</td>
-	  </tr>
-	</table-->
-	
-<div class="card" style="width: 18rem;">
+<div class="card">
   <div class="card-body">
   <div class="input-group mb-3">
   <div class="input-group-prepend">
@@ -294,8 +248,6 @@ margin-left: 0px;
   <div class="input-group-append">
     <span class="input-group-text">Wh</span>
   </div>
-</div>
-  <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text">rated Power</span>
   </div>
@@ -303,14 +255,10 @@ margin-left: 0px;
   <div class="input-group-append">
     <span class="input-group-text">Wp</span>
   </div>
-</div>
-  <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text">Tilt</span>
   </div>
-  <input id="tilt" type="number" min="0" max="90" step="5" class="form-control" value='90' onload="refresh()" onchange="refresh()">
-  </div>
-    <div class="input-group mb-3">
+  <input id="tilt" type="number" min="0" max="90" step="5" class="form-control" value='90' onload="refresh(this.id)" onchange="refresh(this.id)">
     <div class="input-group-prepend">
     <span class="input-group-text">ModuleAzi</span>
   </div>
@@ -340,9 +288,6 @@ margin-left: 0px;
 	  <option value="330">330</option>
 	  <option value="345">345</option>
 	</select>
-</div>
-	<input type="submit" class='button' value="start" onClick="anfangarsch()">
-	<input type="submit" class='button' value="refresh charts" onClick="refresh()">
 	</div>	
 	</div>
 		<canvas id="batterystatuschart" style="width:800px;height:600px;"></canvas>
@@ -351,15 +296,43 @@ margin-left: 0px;
 	</div>
 </div>
 <script>
+//globals needed for UI and charts
 var startingday = document.getElementById('anfang');
 var endday = document.getElementById('ende');
 var myChart1;
 var myChart2;
 var myChart3;
 var number=1;
-function refresh(){
+function refresh(paras){
 var latitude = document.getElementById('latitude').value;
 var longitude = document.getElementById('longitude').value;
+var ratedpower = document.getElementById('ratedpower');
+var batterysize = document.getElementById('batterysize');
+switch(paras){
+case "basic":
+var batsize = 'basicbat';
+var modsize = 'basicmod';
+var chartbat = (document.getElementById(batsize).innerText*1);
+var chartmod = (document.getElementById(modsize).innerText*1);
+break;
+case "pro":
+var batsize = 'probat';
+var modsize = 'promod';
+var chartbat = (document.getElementById(batsize).innerText*1);
+var chartmod = (document.getElementById(modsize).innerText*1);
+break;
+case "ultimate":
+var batsize = 'ultibat';
+var modsize = 'ultimod';
+var chartbat = (document.getElementById(batsize).innerText*1);
+var chartmod = (document.getElementById(modsize).innerText*1);
+break;
+default:
+var chartbat = (document.getElementById('batterysize').value*1);
+var chartmod = (document.getElementById('ratedpower').value*1);
+}
+ratedpower.value = chartmod;
+batterysize.value = chartbat;
 refresher(latitude,longitude);
 }
 // extra function to refresh the charts seperatly. should be combined with function anfangarsch() in a object
@@ -476,6 +449,7 @@ var horizon =new Array(13);
 horizon[0]=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];	
 horizon[1]=[0, 0, 30, 40, 45, 45, 45, 40, 45, 60, 60, 60, 60];
 
+//needed for binding special profil or power to div if changed from default
 function addapp(){
 var appprofil = new Array(24);
 for (var i=0; i<24; i++){
@@ -651,7 +625,7 @@ var schieber = document.getElementsByClassName('schieber');
 	}
 		});
 	});
-
+//---------------------------------------------------------start-------------------------------------------------------------
 function anfangarsch(){
 $('#collapsecards').show({
   toggle: false
@@ -674,35 +648,13 @@ function getGhi(lat, lng)
       url: "https://base.energy/webservice/getGhi.php", //Relative or absolute path to response.php file
       data: json,
       success: function(realskyaverage) {
-
+	  
+		showtherest(realskyaverage, 216, 100, "2weak");
+		//showtherest(realskyaverage, 450, 250, "good");
+		//showtherest(realskyaverage, 720, 400, "outstanding");
 		showbatterystatus(realskyaverage);
 		showsolaryearly(realskyaverage);
 		showhorizont(realskyaverage);
-		showtherest(realskyaverage, 216, 150, "2weak");
-		showtherest(realskyaverage, 450, 250, "good");
-		showtherest(realskyaverage, 720, 400, "outstanding");
-		/*showtherest(realskyaverage, 216, 250, "18250w");
-		showtherest(realskyaverage, 216, 300, "18300w");
-		showtherest(realskyaverage, 216, 500, "18500w");
-		showtherest(realskyaverage, 456, 100, "38100w");
-		showtherest(realskyaverage, 456, 150, "38150w");
-		showtherest(realskyaverage, 456, 200, "38200w");
-		showtherest(realskyaverage, 456, 250, "38250w");
-		showtherest(realskyaverage, 456, 300, "38300w");
-		showtherest(realskyaverage, 456, 500, "38500w");
-		showtherest(realskyaverage, 720, 100, "60100w");
-		showtherest(realskyaverage, 720, 150, "60150w");
-		showtherest(realskyaverage, 720, 200, "60200w");
-		showtherest(realskyaverage, 720, 250, "60250w");
-		showtherest(realskyaverage, 720, 300, "60300w");
-		showtherest(realskyaverage, 720, 500, "60500w");
-		showtherest(realskyaverage, 1440, 100, "120100w");
-		showtherest(realskyaverage, 1440, 150, "120150w");
-		showtherest(realskyaverage, 1440, 200, "120200w");
-		showtherest(realskyaverage, 1440, 250, "120250w");
-		showtherest(realskyaverage, 1440, 300, "120300w");
-		showtherest(realskyaverage, 1440, 500, "120500w");*/
-	   
       }
     });
 } // end getGhi
@@ -744,7 +696,7 @@ console.log(data);
 
 	link.click();
 }*/
-//Converts from radians to degrees.
+//Converts from radians to degrees. used in drawhorizont
 Math.degrees = function(radians) {
   return radians * 180 / Math.PI;
 }
@@ -824,9 +776,8 @@ var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
 var anfang = (document.getElementById('anfang').value*1);
 var ende = (document.getElementById('ende').value*1);
-var verbraucher = document.getElementById('verbraucher').value;
 var whpercycle = document.getElementById('whperday').value;
-
+var sunblock = getsunblock();
 var appprofil = new Array(24);
 for (var i=0; i<24; i++){
 appprofil[i] = 0;
@@ -846,15 +797,24 @@ var vbrprofil = verbrauchsprofil.split(",");
 }
 }
 
-var sunblock = getsunblock();
+var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, appprofil, anfang, ende, sunblock);
+var solarautarkie = cyclecounter[2];
+if (solarautarkie < 0.7){
+	ratedpower += 100;
+	if(ratedpower > 300){
+				batterysize += 264;
+				showtherest(realskyaverage, batterysize, ratedpower, target);
+				}else{
+						showtherest(realskyaverage, batterysize, ratedpower, target);
+						}
+				}else{
+
 var zombieapo=getzombiemode(batterysize, appprofil);
 //console.log("zombieapocalypsemode " +zombieapo);
 var chargetime=getbatterychargetime(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, sunblock);
 //console.log("chargetime is " + chargetime);
 var peakcycle = getpeakcycle(whpercycle, latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock);
 //console.log("peakcycle "+peakcycle);
-var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, appprofil, anfang, ende, sunblock);
-var solarautarkie = cyclecounter[2];
 
 if(solarautarkie > 0.85){
 	var solarautarkieline = "<br> <span style='color:green;font-weight:bold'>solarautarkie = "+Math.round(solarautarkie*100)+"%</span>";
@@ -863,7 +823,31 @@ if(solarautarkie > 0.85){
 				}else{
 					solarautarkieline = "<br> <span style='color:red;font-weight:bold'>solarautarkie = "+Math.round(solarautarkie*100)+"%</span>";
 				}
-document.getElementById(target).innerHTML = "zombieapocalypsemode " + zombieapo + "<br> chargetime needed (h) " + chargetime + solarautarkieline;
+switch(target){
+case "2weak":
+var list = "basiclist";
+var listmod= "basicmod";
+var listbat= "basicbat";
+break;
+case "good":
+var list = "prolist";
+var listmod= "promod";
+var listbat= "probat";
+break;
+case "outstanding":
+var list = "ultimatelist";
+var listmod= "ultimod";
+var listbat= "ultibat";
+break;
+}
+document.getElementById(target).innerHTML = "zombieapocalypsemode (h) " + zombieapo + "<br> chargetime needed (h) " + chargetime + solarautarkieline;
+document.getElementById(list).innerHTML = "<li class='list-group-item'>batterysize: <p id='"+listbat+"'>"+batterysize+"</p></li><li class='list-group-item'>ratedpower: <p id='"+listmod+"'>"+ratedpower+"</p></li>";
+if(target== "outstanding"){return;}
+if(target == "good"){
+target = "outstanding";
+}else{target = "good"}
+showtherest(realskyaverage, batterysize, (ratedpower+100), target)
+}
 }
 
 function drawbatterystatus(batteryarray, realskyarray){

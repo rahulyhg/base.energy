@@ -317,7 +317,7 @@ return (resultscsv);
 
 function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock){
 	    if (sunblock === undefined) {
-          sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
 	//console.log(realskyaverage);
 	var moduleazirad = mathtoradians(moduleazi);
