@@ -12,12 +12,69 @@
 	<link href="../wp-content/themes/enfold-child/css/nouislider.min.css" rel="stylesheet">
 	<!-- Charts JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	<link rel="stylesheet" href="../wp-content/themes/enfold-child/css/electroscope.css">
 <style>
+.list-group{
+margin-bottom: 18px;
+}
+#gridselector{
+    margin: auto;
+    width: 67%;
+}
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.cc-selector-2 input{
+    z-index:999;
+}
+
+.offgrid{background-image:url(../wp-content/themes/enfold-child/img/offgrid.jpg);}
+.ongrid{background-image:url(../wp-content/themes/enfold-child/img/ongrid.jpg);}
+
+.cc-selector-2 input:active +.drinkcard-cc, .cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector-2 input:checked +.drinkcard-cc, .cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:345px;height:100px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
+
 #batterystatuschart {
 background-image: url("batterystatus.png");
 }
+.progress-bar{
+color: black;
+font-weight: 900;
+}
 .behaelter {
 margin-left: 0px;
+margin-top: 18px;
+margin-bottom: 18px;
+}
+.card-title {
+text-align: center;
 }
 .schieber{
 	margin: 16px;
@@ -36,42 +93,12 @@ margin-left: 0px;
 .noUi-active .noUi-tooltip {
     display: block;
 }
-#autarkitable {
-	text-align: center;
-    border-collapse: collapse;
-    width: 100%;
-	font-family:    Tahoma;
-}
-
-#überschrift {
-	border: 1px solid #ddd;
-}
-#autarkitable td {
-	font-size: 12px;
-    border-bottom: 1px solid #ddd;
-    padding: 8px;
-}
-
-#autarkitable th:hover {background-color: #E7EFF7;}
-#autarkitable td:hover {background-color: #E7EFF7;}
-
-#autarkitable th {
-	width: 200px;
-	font-weight: 900;
-	font-size: 12px;
-	padding: 8px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background-color: #E6E6E6;
-    color: #505050;
-	border: 1px solid #ddd;
-}
 </style>
 </head>
 <body onload="refreshhorizon()" onchange="refreshwhperday()">
 <div class="container">
 	<div class="card">
-		<h4 class="card-header">Solar Reporter</h4>
+		<h4 class="card-header solcubeHeadline">Solar Reporter</h4>
 	<form action="#" >
 	<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseLocation" aria-expanded="false" aria-controls="collapseLocation">
 	Location
@@ -108,7 +135,7 @@ margin-left: 0px;
 		  </div>
 </div>
 	  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseHorizon" aria-expanded="false" aria-controls="collapseHorizon">
-	Erstelle horizontal file
+	customize horizon
   </button>
 <div class="collapse" id="collapseHorizon">
   <div class="card card-body">
@@ -135,6 +162,14 @@ margin-left: 0px;
 </div>
 <div class="card">
   <div  class="card-body">
+    <div id='gridselector' class="cc-selector">
+	<form>
+	    <input id="ongrid" type="radio" name="gridradio" value="ongrid" />
+        <label class="drinkcard-cc ongrid"for="ongrid"></label>
+        <input checked="checked" id="offgrid" type="radio" name="gridradio" value="offgrid" />
+        <label class="drinkcard-cc offgrid" for="offgrid"></label>
+    </form>
+	</div>
   <div id='applist' class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text">Verbraucher</span>
@@ -158,8 +193,8 @@ margin-left: 0px;
     <span class="input-group-text">Wh/d</span>
   </div>
 </div>
-<div id='appprofiler'>
-<select id="profilauswahl" onchange="refreshprofil()">
+<div class="input-group">
+<select class="custom-select" id="profilauswahl" onchange="refreshprofil()">
 	<option value="" selected disabled hidden>Erstelle app-profil</option>
 	  <option value="0">light</option>
 	  <option value="1">smartphone</option>
@@ -173,7 +208,10 @@ margin-left: 0px;
 	  <option value="9">säge</option>
 	  <option value="10">küchenmaschine</option>
 	  <option value="11">ventilator</option>
-	</select> <button class="btn btn-outline-secondary" type="button" onClick='addapp()'>App hinzufügen</button><br><br>
+	</select>
+	<div class="input-group-append">
+	<button class="btn btn-outline-secondary" type="button" onClick='addapp()'>App hinzufügen</button>
+	</div>
 	<div class="behaelter">
 	1<div class="sliders" id="0"></div>
 	2<div class="sliders" id="1"></div>
@@ -201,6 +239,11 @@ margin-left: 0px;
 	24<div class="sliders" id="23"></div>
 	</div>
 </div>	
+<div class="progress">
+  <div class="progress-bar" role="progressbar" style="width: 18%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">night</div>
+  <div class="progress-bar bg-warning" role="progressbar" style="width: 62%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">day</div>
+  <div class="progress-bar " role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">night</div>
+</div>
 </div>	
 </div>
 </form>
@@ -210,16 +253,16 @@ margin-left: 0px;
 <div class="collapse" id="collapsecards">
 <div class="card-group">
   <div class="card">
-    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleSmall.png" alt="Card image cap">
+    <img id='firstcardimg' class="card-img-top" src="../wp-content/themes/enfold-child/img/SolCube-front-t1.jpg" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-title">SolCube basic</h5>
+      <h5 id='firstcardtitle' class="card-title">SolCube basic</h5>
 	  <ul id="basiclist" class="list-group"></ul>
       <p id="2weak" class="card-text"></p>
 	  <button id ='basic' type="button" class="btn btn-primary" onClick="refresh(this.id)">show in chart</button>
     </div>
   </div>
   <div class="card">
-    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/moduleMedium.png" alt="Card image cap">
+    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/SolCube-front-t1.jpg" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">SolCube Pro</h5>
 	  <ul id="prolist" class="list-group"></ul>
@@ -228,7 +271,7 @@ margin-left: 0px;
     </div>
   </div>
   <div class="card">
-    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/module2xMedium.png" alt="Card image cap">
+    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/SolCube-front-t1.jpg" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">SolCube Ultimate</h5>
 	  <ul id="ultimatelist" class="list-group"></ul>
@@ -460,7 +503,7 @@ var verbraucher = (document.getElementById('verbraucher').value*1);
 var appname = $('select[id=profilauswahl]');
 var appobject;
 appobject="appid"+number+"";
-var pickedapp = $('<div class="input-group mb-3" id="'+appobject+'" data-power="'+verbraucher+'" data-profil="'+appprofil+'"><input type="text" class="form-control" placeholder="'+appname.children(':selected').text()+' Leistung: '+verbraucher+'Watt" aria-label="app" aria-describedby="basic-addon2"><div class="input-group-append"><button class="btn btn-outline-secondary" type="button" onClick="editapp('+appobject+')">Edit Profil</button></div></div>');
+var pickedapp = $('<div class="input-group mb-3" id="'+appobject+'" data-power="'+verbraucher+'" data-profil="'+appprofil+'"><input type="text" class="form-control" placeholder="'+appname.children(':selected').text()+' Leistung: '+verbraucher+'Watt" aria-label="app" aria-describedby="basic-addon2" disabled><div class="input-group-append"><button class="btn btn-outline-secondary" type="button" onClick="editapp('+appobject+')">Edit Profil</button></div></div>');
 $('#applist').append(pickedapp);
 number++;
 //console.log(document.getElementById('appid1').getAttribute("data-profil"));
@@ -523,8 +566,13 @@ var wattsum = 0;
 for (var x = 1; x < number; x++){
 var timesumapp = 0;
 var appfinder = "appid"+x+"";
-var watt = (document.getElementById(appfinder).getAttribute("data-power")*1);
+try{
 var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
+var watt = (document.getElementById(appfinder).getAttribute("data-power")*1)
+}catch {
+var verbrauchsprofil = "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.93,0.96,1.00,0.50,0.00,0.00,0.00";
+var watt = 0;
+}
 var vbrprofil = verbrauchsprofil.split(",");
 for (var i=0; i<24; i++){
 	timesumapp += (vbrprofil[i]*1);
@@ -637,6 +685,7 @@ getGhi(latitude,longitude);
 
 function getGhi(lat, lng)
 {
+var grid = $("#ongrid").is(":checked");
     var request = {
 				lat: lat,
 				lng: lng
@@ -648,13 +697,16 @@ function getGhi(lat, lng)
       url: "https://base.energy/webservice/getGhi.php", //Relative or absolute path to response.php file
       data: json,
       success: function(realskyaverage) {
-	  
+		if (grid == true){
+		ongridshowcase(realskyaverage);
+		}else{
 		showtherest(realskyaverage, 216, 100, "2weak");
 		//showtherest(realskyaverage, 450, 250, "good");
 		//showtherest(realskyaverage, 720, 400, "outstanding");
 		showbatterystatus(realskyaverage);
 		showsolaryearly(realskyaverage);
 		showhorizont(realskyaverage);
+		}
       }
     });
 } // end getGhi
@@ -770,7 +822,7 @@ var sunalti = clearskyvalue[2];
 drawhorizont(sunalti, sunblock);
 }
 
-function showtherest(realskyaverage, batterysize, ratedpower, target){
+function ongridshowcase(realskyaverage){
 var latitude = document.getElementById('latitude').value;
 var tilt = document.getElementById('tilt').value;
 var moduleazi = document.getElementById('moduleazi').value;
@@ -796,15 +848,69 @@ var vbrprofil = verbrauchsprofil.split(",");
 	appprofil[i] += (watt*vbrprofil[i]);
 }
 }
+var realskyarray1 = RealskyValue(latitude, realskyaverage, tilt, moduleazi, 100, sunblock);
+var realskyarray2 = RealskyValue(latitude, realskyaverage, tilt, moduleazi, 300, sunblock);
+var realskyarray3 = RealskyValue(latitude, realskyaverage, tilt, moduleazi, 600, sunblock);
+var realsky1 = realskyarray1[3];
+var realsky2 = realskyarray2[3];
+var realsky3 = realskyarray3[3];
+var paybackjun = Math.round((0.0002*realsky1[6]));
+var paybackmar = Math.round((0.0002*realsky1[3]));
+var paybackdez = Math.round((0.0002*realsky1[12]));
+var paybackjun2 = Math.round((0.0002*realsky2[6]));
+var paybackmar2 = Math.round((0.0002*realsky2[3]));
+var paybackdez2 = Math.round((0.0002*realsky2[12]));
+var paybackjun3 = Math.round((0.0002*realsky3[6]));
+var paybackmar3 = Math.round((0.0002*realsky3[3]));
+var paybackdez3 = Math.round((0.0002*realsky3[12]));
+document.getElementById('firstcardtitle').innerHTML = 'Balkonmodul';
+document.getElementById('firstcardimg').src='../wp-content/themes/enfold-child/img/simon.jpg';
+document.getElementById('basiclist').innerHTML = "<li class='list-group-item'>batterysize: <p style='display:inline' id='basicbat'>30 Wh</p></li><li class='list-group-item'>ratedpower Module: <p style='display:inline' id='basicmod'>100</p></li>";
+document.getElementById('2weak').innerHTML = 'monatliche Ersparnis im Juni: '+paybackjun+'€ <br> monatliche Ersparnis im März: '+paybackmar+'€ <br> monatliche Ersparnis im Dezember: '+paybackdez+'€';
+document.getElementById('prolist').innerHTML = "<li class='list-group-item'>batterysize: <p style='display:inline' id='probat'>720 Wh</p></li><li class='list-group-item'>ratedpower Module: <p style='display:inline' id='promod'>300</p></li>";
+document.getElementById('good').innerHTML = 'monatliche Ersparnis im Juni: '+paybackjun2+'€ <br> monatliche Ersparnis im März: '+paybackmar2+'€ <br> monatliche Ersparnis im Dezember: '+paybackdez2+'€';
+document.getElementById('ultimatelist').innerHTML = "<li class='list-group-item'>batterysize: <p style='display:inline' id='ultibat'>1200 Wh</p></li><li class='list-group-item'>ratedpower Module: <p style='display:inline' id='ultimod'>600</p></li>";
+document.getElementById('outstanding').innerHTML = 'monatliche Ersparnis im Juni: '+paybackjun3+'€ <br> monatliche Ersparnis im März: '+paybackmar3+'€ <br> monatliche Ersparnis im Dezember: '+paybackdez3+'€';
+}
 
+function showtherest(realskyaverage, batterysize, ratedpower, target){
+var latitude = document.getElementById('latitude').value;
+var tilt = document.getElementById('tilt').value;
+var moduleazi = document.getElementById('moduleazi').value;
+var anfang = (document.getElementById('anfang').value*1);
+var ende = (document.getElementById('ende').value*1);
+var whpercycle = document.getElementById('whperday').value;
+var sunblock = getsunblock();
+var allpows = new Array();
+var appprofil = new Array(24);
+for (var i=0; i<24; i++){
+appprofil[i] = 0;
+}
+for (var i=0; i<24; i++){
+for (var x = 1; x < number; x++){
+var appfinder = "appid"+x+"";
+try{
+var verbrauchsprofil = (document.getElementById(appfinder).getAttribute("data-profil"));
+var watt = (document.getElementById(appfinder).getAttribute("data-power")*1);
+allpows.push(watt);
+}catch {
+var verbrauchsprofil = "0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.93,0.96,1.00,0.50,0.00,0.00,0.00";
+var watt = 0;
+}
+var vbrprofil = verbrauchsprofil.split(",");
+	appprofil[i] += (watt*vbrprofil[i]);
+}
+}
+var maxpower = Math.max(...allpows);
 var cyclecounter = CycleCounter(latitude, tilt, moduleazi, realskyaverage, ratedpower, batterysize, whpercycle, appprofil, anfang, ende, sunblock);
 var solarautarkie = cyclecounter[2];
 if (solarautarkie < 0.7){
 	ratedpower += 100;
-	if(ratedpower > 300){
+	if(ratedpower > 300 && batterysize < 400){
 				batterysize += 264;
 				showtherest(realskyaverage, batterysize, ratedpower, target);
 				}else{
+					if(ratedpower > 900 && batterysize < 700){batterysize += 264;}
 						showtherest(realskyaverage, batterysize, ratedpower, target);
 						}
 				}else{
@@ -828,20 +934,25 @@ case "2weak":
 var list = "basiclist";
 var listmod= "basicmod";
 var listbat= "basicbat";
+var listpow= "basicpow";
 break;
 case "good":
 var list = "prolist";
 var listmod= "promod";
 var listbat= "probat";
+var listpow= "propow";
 break;
 case "outstanding":
 var list = "ultimatelist";
 var listmod= "ultimod";
 var listbat= "ultibat";
+var listpow= "ultipow";
 break;
 }
+document.getElementById('firstcardtitle').innerHTML = 'SolCube basic';
+document.getElementById('firstcardimg').src='../wp-content/themes/enfold-child/img/SolCube-front-t1.jpg';
 document.getElementById(target).innerHTML = "zombieapocalypsemode (h) " + zombieapo + "<br> chargetime needed (h) " + chargetime + solarautarkieline;
-document.getElementById(list).innerHTML = "<li class='list-group-item'>batterysize: <p id='"+listbat+"'>"+batterysize+"</p></li><li class='list-group-item'>ratedpower: <p id='"+listmod+"'>"+ratedpower+"</p></li>";
+document.getElementById(list).innerHTML = "<li class='list-group-item'>inverter Power: <p style='display:inline' id='"+listmod+"'>"+maxpower+"</p></li><li class='list-group-item'>batterysize: <p style='display:inline' id='"+listbat+"'>"+batterysize+"</p></li><li class='list-group-item'>ratedpower Module: <p style='display:inline' id='"+listmod+"'>"+ratedpower+"</p></li>";
 if(target== "outstanding"){return;}
 if(target == "good"){
 target = "outstanding";
@@ -1130,7 +1241,7 @@ var chartoptions = {
 								},
 								scaleLabel: {
 											display: true,
-											labelString: 'Einstrahlung in Watt/m²'
+											labelString: 'Einstrahlung in Wh/m²'
 										  }
 					  }]
 			}
