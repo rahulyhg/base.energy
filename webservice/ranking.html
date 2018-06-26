@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../wp-content/themes/enfold-child/img/SolCube-favicon.png">
+
+    <title>SolPortal - Ranking</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../wp-content/themes/enfold-child/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+	
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<style>
+	/*    --------------------------------------------------
+	:: General
+	-------------------------------------------------- */
+body {
+	font-family: 'Open Sans', sans-serif;
+	color: #353535;
+}
+.content h1 {
+	text-align: center;
+}
+.content .content-footer p {
+	color: #6d6d6d;
+    font-size: 12px;
+    text-align: center;
+}
+.content .content-footer p a {
+	color: inherit;
+	font-weight: bold;
+}
+
+/*	--------------------------------------------------
+	:: Table Filter
+	-------------------------------------------------- */
+.panel {
+	border: 1px solid #ddd;
+	background-color: #fcfcfc;
+}
+.panel .btn-group {
+	margin: 15px 0 30px;
+}
+.panel .btn-group .btn {
+	transition: background-color .3s ease;
+}
+.table-filter {
+	background-color: #fff;
+	border-bottom: 1px solid #eee;
+}
+.table-filter tbody tr:hover {
+	cursor: pointer;
+	background-color: #eee;
+}
+.table-filter tbody tr td {
+	padding: 10px;
+	vertical-align: middle;
+	border-top-color: #eee;
+}
+.table-filter tbody tr.selected td {
+	background-color: #eee;
+}
+.table-filter tr td:first-child {
+	width: 38px;
+}
+.table-filter tr td:nth-child(2) {
+	width: 35px;
+}
+.ckbox {
+	position: relative;
+}
+.ckbox input[type="checkbox"] {
+	opacity: 0;
+}
+.ckbox label {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.ckbox label:before {
+	content: '';
+	top: 1px;
+	left: 0;
+	width: 18px;
+	height: 18px;
+	display: block;
+	position: absolute;
+	border-radius: 2px;
+	border: 1px solid #bbb;
+	background-color: #fff;
+}
+.ckbox input[type="checkbox"]:checked + label:before {
+	border-color: #2BBCDE;
+	background-color: #2BBCDE;
+}
+.ckbox input[type="checkbox"]:checked + label:after {
+	top: 3px;
+	left: 3.5px;
+	content: '\e013';
+	color: #fff;
+	font-size: 11px;
+	font-family: 'Glyphicons Halflings';
+	position: absolute;
+}
+.table-filter .star {
+	color: #ccc;
+	text-align: center;
+	display: block;
+}
+.table-filter .star.star-checked {
+	color: #F0AD4E;
+}
+.table-filter .star:hover {
+	color: #ccc;
+}
+.table-filter .star.star-checked:hover {
+	color: #F0AD4E;
+}
+.table-filter .media-photo {
+	width: 55px;
+	
+}
+.table-filter .media-thumb {
+	width: 32px;
+	
+}
+.table-filter .media-body {
+    display: block;
+    /* Had to use this style to force the div to expand (wasn't necessary with my bootstrap version 3.3.6) */
+}
+.table-filter .media-meta {
+	font-size: 11px;
+	color: #999;
+}
+.table-filter .media .title {
+	color: #2BBCDE;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: normal;
+	margin: 0;
+}
+.table-filter .media .title span {
+	font-size: .8em;
+	margin-right: 20px;
+}
+.table-filter .media .title span.pagado {
+	color: #5cb85c;
+}
+.table-filter .media .title span.pendiente {
+	color: #f0ad4e;
+}
+.table-filter .media .title span.cancelado {
+	color: #d9534f;
+}
+.table-filter .media .summary {
+	font-size: 14px;
+}
+	</style>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+	<main role="main" class="container">
+	<div class="table-container">
+							<table class="table table-filter">
+								<tbody>
+									<tr>
+									<th>Rank</th>
+									<th></th>
+									<th>User</th>
+									<th>SolApps</th>
+									<th>SunCoins</th>
+									</tr>
+									<tr>
+										<td>
+										#1
+										</td>
+										<td>
+										<a href="#" class="pull-left">
+										<img src="../wp-content/themes/enfold-child/img/solarrebellen_start2.jpg" class="media-photo">
+										</a>
+										</td>
+										<td>
+											<div class="media">
+												<div class="media-body">
+													<span class="media-meta pull-right">Member since: 2018-05-05</span>
+													<h4 class="title">
+														nerdifand
+														<span class="pull-right pagado">(Pagado)</span>
+													</h4>
+													<p class="summary">Die Sonne schickt uns keine Rechnung</p>
+												</div>
+											</div>
+										</td>
+										<td id='solapps'>
+										<span data-feather="battery"></span>  200 Bycicle-Charges<br>
+										<span data-feather="battery"></span> 200 phone-Charges<br>
+										<span data-feather="music"></span> 10 hours music-session<br>
+										</td>
+										<td id='suncoin'>
+										<span style="font-weight: 900;">554</span>
+										<img src="../wp-content/themes/enfold-child/img/solarcoin.png" class="media-thumb">
+										</td>
+									</tr>
+									<tr data-status="pendiente">
+										<td>
+										#2
+										</td>
+										<td>
+										<a href="#" class="pull-left">
+										<img src="../wp-content/themes/enfold-child/img/simon.jpg" class="media-photo">
+										</a>
+										</td>
+										<td>
+											<div class="media">
+												<div class="media-body">
+													<span class="media-meta pull-right">Member since: 2018-05-05</span>
+													<h4 class="title">
+														Sunny Simon
+														<span class="pull-right pendiente">(Pendiente)</span>
+													</h4>
+													<p class="summary">Wer die Sonne nicht ehrt, ist die kWh nicht wert</p>
+												</div>
+											</div>
+										</td>
+										<td id='solapps'>
+										<span data-feather="fast-forward"></span>  64 Charges Video-Equipment<br>
+										<span data-feather="wifi"></span> 10 days internet-connection<br>
+										<span data-feather="music"></span> 10 hours music-session<br>
+										</td>
+										<td id='suncoin'>
+										<span style="font-weight: 900;">264</span>
+										<img src="../wp-content/themes/enfold-child/img/solarcoin.png" class="media-thumb">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+    </main>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../wp-content/themes/enfold-child/js/popper.min.js"></script>
+    <script src="../wp-content/themes/enfold-child/js/bootstrap.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+	
+    </script>
+  </body>
+</html>
