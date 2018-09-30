@@ -317,7 +317,7 @@ return (resultscsv);
 
 function RealskyValue(latitude, realskyaverage, tilt, moduleazi, ratedpower, sunblock){
 	    if (sunblock === undefined) {
-          sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          sunblock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
 	//console.log(realskyaverage);
 	var moduleazirad = mathtoradians(moduleazi);
@@ -526,8 +526,7 @@ var realskydaily=realskyvalue[2]
 							cyclecounter +=1;
 							//console.log("cyclecounter "+cyclecounter);
 						}
-				}
-					else{
+				}else{
 						increase = realsky[jahrestag][tagesstunde-1];
 	//console.log("batterystatus um "+(tagesstunde-1)+" am "+(jahrestag-0)+"= " +batterystatus[jahrestag][tagesstunde-1]+" realsky " +realsky[jahrestag][tagesstunde-1]+ " output = "+output);
 						if (output>0){

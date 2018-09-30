@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../wp-content/themes/enfold-child/img/SolCube-favicon.png">
+
+    <title>SolPortal - Devices</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../wp-content/themes/enfold-child/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+	
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<style>
+.card {margin-bottom: 18px;};
+	</style>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+	<main id='mainframe' role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+	       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Devices</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+			  <div class="btn-group mr-2">
+                <button class="btn btn-sm btn-outline-secondary">Add new device</button>
+              </div>
+            </div>
+          </div>
+		  
+ <div class="card" style="width: 18rem;">
+  <div class="card-header"> 
+    <ul class="nav nav-tabs card-header-tabs pull-right"  id="myTab" role="tablist">
+      <li class="nav-item">
+       <a class="nav-link active" id="home-tab" data-toggle="tab" href="#status" role="tab" aria-controls="status" aria-selected="true">Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contract" role="tab" aria-controls="contract" aria-selected="false">Contract</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+   <div class="tab-content" id="myTabContent">
+   <div class="tab-pane fade show active" id="status" role="tabpanel" aria-labelledby="home-tab">
+   <img id='firstcardimg' class="card-img-top" src="../wp-content/themes/enfold-child/img/simon.jpg" alt="Card image cap">
+      <h5 id='firstcardtitle' class="card-title">SunCoin Miner</h5>
+	  <ul id="basiclist" class="list-group">
+	  <li class='list-group-item'>Status: <span style="color:green">Online</span></li>
+	  </ul>
+	  <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+      <p id="2weak" class="card-text"></p>
+   </div>
+   <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="profile-tab">...</div>
+   <div class="tab-pane fade" id="contract" role="tabpanel" aria-labelledby="contact-tab">...</div>
+        </div>
+  </div>
+</div>
+
+ <div class="card" style="width: 18rem;">
+  <div class="card-header"> 
+    <ul class="nav nav-tabs card-header-tabs pull-right"  id="myTab2" role="tablist">
+      <li class="nav-item">
+       <a class="nav-link active" id="home-tab2" data-toggle="tab" href="#status2" role="tab" aria-controls="status2" aria-selected="true">Status</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab2" data-toggle="tab" href="#settings2" role="tab" aria-controls="settings2" aria-selected="false">Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="contact-tab2" data-toggle="tab" href="#contract2" role="tab" aria-controls="contract2" aria-selected="false">Contract</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body">
+   <div class="tab-content" id="myTabContent2">
+   <div class="tab-pane fade show active" id="status2" role="tabpanel" aria-labelledby="home-tab2">
+    <img class="card-img-top" src="../wp-content/themes/enfold-child/img/SolCube-front-t1.jpg" alt="Card image cap">
+      <h5 class="card-title">SolCube Gartenhaus</h5>
+	  <ul id="prolist" class="list-group">
+	  <li class='list-group-item'>Status: <span style="color:red">OFFLINE</span></li>
+	  </ul>
+	  <p class="card-text"><small class="text-muted">Last updated 2 weeks ago</small></p>
+      <p id="good" class="card-text"></p>
+	</div>
+   <div class="tab-pane fade" id="settings2" role="tabpanel" aria-labelledby="profile-tab2">...</div>
+   <div class="tab-pane fade" id="contract2" role="tabpanel" aria-labelledby="contact-tab2">...</div>
+	</div>
+  </div>
+</div>
+</div>
+</main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../wp-content/themes/enfold-child/js/popper.min.js"></script>
+    <script src="../wp-content/themes/enfold-child/js/bootstrap.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+
+    <!-- Graphs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script>
+    </script>
+  </body>
+</html>
