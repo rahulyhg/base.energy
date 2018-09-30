@@ -103,5 +103,11 @@ function my_theme_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_styles');
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_scripts');
 
+//set builder mode to debug
+add_action('avia_builder_mode', "builder_set_debug");
+function builder_set_debug()
+{
+  return "debug";
+}
 
 ?>
